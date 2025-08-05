@@ -67,109 +67,99 @@
     </nav>
   </header>
 
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Duku (Baccaurea motleyana) - MapFloFa</title>
+  <title>Duku (Baccaurea motleyana)</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #f5f5f0; color: #333; }
+    .hero { position: relative; }
+    .hero img { width: 100%; height: auto; }
+    .hero-text {
+      position: absolute; bottom: 20px; left: 20px;
+      background: rgba(0,0,0,0.5); color: #fff; padding: 10px 20px;
+      font-size: 2em; font-weight: bold;
+    }
+    .section { padding: 20px; border-bottom: 1px solid #ccc; }
+    .section h2 { margin-top: 0; color: #2e7d32; }
+    .gallery img { width: 48%; margin: 1%; border-radius: 8px; }
+    .map { height: 300px; margin-top: 10px; }
+    .taxo, .notes { background: #e8f5e9; padding: 10px; border-radius: 8px; }
+  </style>
 </head>
 <body>
-  <div class="container">
 
-    <!-- Sidebar Taksonomi -->
-    <aside class="sidebar">
-      <h2>Taksonomi</h2>
-    <nav>
-      <a href="Family.html">Family</a>
-      <a href="Genus.html">Genus</a>
-      <a href="Spesies.html">Sepesies</a>
-    <nav>
-       <ul>
-        <li><strong>Family:</strong> Phyllanthaceae</li>
-        <li><strong>Genus:</strong> Baccaurea</li>
-        <li><strong>Spesies:</strong> B. motleyana (Duku)</li>
-      </ul>
-    </aside>
-
-    <!-- Konten Utama -->
-    <main class="content">
-
-      <!-- Foto Spesies -->
-      <section class="foto-spesies">
-        <h2>Foto Spesies</h2>
-        <img src="assets/duku1.jpg" alt="Duku" />
-        <img src="assets/duku2.jpg" alt="Buah Duku" />
-      </section>
-
-      <!-- Deskripsi -->
-      <section class="deskripsi">
-        <h2>Deskripsi</h2>
-        <p>
-          Duku (*Baccaurea motleyana*) adalah tumbuhan tropis dari family Phyllanthaceae yang menghasilkan buah manis dan populer di Kalimantan. Buahnya bulat kecil, kulit agak tebal, dan bergetah, mirip langsat namun rasa lebih manis. Duku umumnya ditemukan di kebun rakyat dan tepi hutan sekunder.
-        </p>
-      </section>
-
-      <!-- Taksonomi Detail -->
-      <section class="taksonomi">
-        <h2>Detail Taksonomi</h2>
-        <ul>
-          <li><strong>Kingdom:</strong> Plantae</li>
-          <li><strong>Phylum:</strong> Tracheophyta</li>
-          <li><strong>Class:</strong> Magnoliopsida</li>
-          <li><strong>Order:</strong> Malpighiales</li>
-          <li><strong>Family:</strong> Phyllanthaceae</li>
-          <li><strong>Genus:</strong> Baccaurea</li>
-          <li><strong>Spesies:</strong> B. motleyana</li>
-        </ul>
-      </section>
-
-      <!-- Peta Titik Rekor -->
-      <section>
-        <h2>📍 Titik Rekor Temuan</h2>
-        <div id="map-titik" style="height: 300px;"></div>
-      </section>
-
-      <!-- Peta Sebaran Distribusi -->
-      <section>
-        <h2>🗺️ Sebaran Distribusi Alami</h2>
-        <div id="map-sebaran" style="height: 300px;"></div>
-      </section>
-
-      <!-- Catatan Kontributor -->
-      <section class="kontributor">
-        <h2>📝 Catatan Kontributor</h2>
-        <ul>
-          <li>Acer (Sungai Pinang, 2025): Duku ditemukan di kebun dekat sungai. Buah sangat manis dan kulit tidak terlalu tebal.</li>
-          <li>Yanti (Kutai Barat, 2024): Duku tumbuh liar di tepi hutan sekunder, bersama langsat dan rambai.</li>
-        </ul>
-      </section>
-
-    </main>
+  <!-- Hero Section -->
+  <div class="hero">
+    <img src="assets/duku-hero.jpg" alt="Duku Hero Image" />
+    <div class="hero-text">Duku (Baccaurea motleyana)</div>
   </div>
 
-  <!-- Skrip Leaflet untuk dua peta -->
+  <!-- Deskripsi -->
+  <div class="section">
+    <h2>📝 Deskripsi</h2>
+    <p>Duku adalah buah tropis dari family Phyllanthaceae yang populer di Kalimantan. Buahnya manis, kulit agak tebal, dan sering ditemukan di kebun rakyat serta tepi hutan.</p>
+  </div>
+
+  <!-- Galeri Foto -->
+  <div class="section gallery">
+    <h2>📷 Galeri</h2>
+    <img src="assets/duku1.jpg" alt="Buah Duku" />
+    <img src="assets/duku2.jpg" alt="Pohon Duku" />
+  </div>
+
+  <!-- Taksonomi -->
+  <div class="section taxo">
+    <h2>🔍 Taksonomi</h2>
+    <ul>
+      <li><strong>Kingdom:</strong> Plantae</li>
+      <li><strong>Phylum:</strong> Tracheophyta</li>
+      <li><strong>Class:</strong> Magnoliopsida</li>
+      <li><strong>Order:</strong> Malpighiales</li>
+      <li><strong>Family:</strong> Phyllanthaceae</li>
+      <li><strong>Genus:</strong> Baccaurea</li>
+      <li><strong>Spesies:</strong> B. motleyana</li>
+    </ul>
+  </div>
+
+  <!-- Peta Titik Rekor -->
+  <div class="section">
+    <h2>📍 Titik Rekor Temuan</h2>
+    <div id="map-titik" class="map"></div>
+  </div>
+
+  <!-- Peta Sebaran -->
+  <div class="section">
+    <h2>🗺️ Sebaran Alami</h2>
+    <div id="map-sebaran" class="map"></div>
+  </div>
+
+  <!-- Catatan Kontributor -->
+  <div class="section notes">
+    <h2>🗒️ Catatan Kontributor</h2>
+    <p><strong>Acer (2025):</strong> Duku ditemukan di kebun dekat sungai. Buah sangat manis dan kulit tidak terlalu tebal.</p>
+    <p><strong>Yanti (2024):</strong> Tumbuh liar di tepi hutan sekunder bersama langsat dan rambai.</p>
+  </div>
+
+  <!-- Leaflet Maps -->
   <script>
-    // Peta Titik Rekor Temuan
     const mapTitik = L.map('map-titik').setView([-0.5, 117.1], 6);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapTitik);
-    L.marker([-0.484, 117.153]).addTo(mapTitik).bindPopup('Duku ditemukan oleh Acer');
+    L.marker([-0.484, 117.153]).addTo(mapTitik).bindPopup('Temuan oleh Acer');
 
-    // Peta Sebaran Distribusi Alami (dummy polygon contoh)
     const mapSebaran = L.map('map-sebaran').setView([-0.5, 117.1], 6);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapSebaran);
-    const polygon = L.polygon([
+    L.polygon([
       [-0.2, 116.8],
       [-0.7, 116.9],
       [-0.6, 117.3],
       [-0.2, 117.4]
-    ], { color: 'green' }).addTo(mapSebaran);
-    polygon.bindPopup("Sebaran alami Duku");
+    ], { color: 'green' }).addTo(mapSebaran).bindPopup("Sebaran alami Duku");
   </script>
+
 </body>
 </html>
- 
-
-
