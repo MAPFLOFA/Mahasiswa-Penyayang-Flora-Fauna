@@ -7,7 +7,7 @@
 </head>
 <body>
   <header>
-    <h1>UPLOAD KISAHMU</h1>
+    <h1>Upload Spesies Baru</h1>
     <nav>
       <a href="index.html">HOME</a>
       <a href="tentang.html">TENTANG</a>
@@ -19,23 +19,23 @@
 
   <main>
     <form action="#" method="post" enctype="multipart/form-data">
-      <label for="jenis">Jenis (Flora/Fauna/kegiatan):</label><br />
+      <label for="jenis">Jenis (Flora/Fauna&kegiatan):</label><br />
       <select id="jenis" name="jenis">
         <option value="flora">Flora</option>
         <option value="fauna">Fauna</option>
-	<option value="kegiatan">Kegiatan</option>
+		<option value="kegiatan">Kegiatan</option>
       </select><br /><br />
 
       <label for="nama">Nama Spesies:</label><br />
-      <input id="nama/><br />
+      <input type="text" id="nama" name="nama" required /><br /><br />
 
       <label for="nama_latin">Nama Latin:</label><br />
-      <input id="nama_latin" //><br />
+      <input type="text" id="nama_latin" name= required /><br /><br />
 
       <label for="deskripsi">Deskripsi:</label><br />
-      <textarea id="deskripsi" ><br /><br />
-	      
-	<label for="status">Status Konservasi:</label><br />
+      <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea><br /><br />
+
+      <label for="status">Status Konservasi:</label><br />
       <input type="text" id="status" name="status" /><br /><br />
 
       <label for="cites">Status CITES:</label><br />
@@ -61,8 +61,4 @@
     <p>© 2025 MapFloFa</p>
   </footer>
 </body>
-
 </html>
-
-
-
