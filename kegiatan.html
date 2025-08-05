@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kegiatan - MapFloFa</title>
+  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+</head>
+<body>
+  <header>
+    <h1>Kegiatan MapFloFa</h1>
+    <nav>
+      <a href="index.html">HOME</a>
+      <a href="tentang.html">TENTANG</a>
+      <a href="kegiatan.html">KEGIATAN</a>
+      <a href="flora.html">FLORA</a>
+      <a href="fauna.html">FAUNA</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="kegiatan-card">
+      <img src="assets/img/petualangan-selayar.jpg" alt="Ekspedisi Selayar">
+      <h2>Ekspedisi Selayar</h2>
+      <p>Dokumentasi flora pesisir dan satwa liar di hutan bakau daerah Selayar, Kalimantan Timur.</p>
+      <div id="map-selayar" class="mapbox"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© MapFloFa 2025</p>
+  </footer>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  ></script>
+  <script>
+    var mapSelayar = L.map('map-selayar').setView([-1.255, 116.827], 10); // Ganti sesuai titik lokasi
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mapSelayar);
+    L.marker([-1.255, 116.827]).addTo(mapSelayar)
+      .bindPopup('Lokasi Ekspedisi Selayar')
+      .openPopup();
+  </script></script>
+  <script><form id="form-spesies">
+  <input type="text" name="nama" placeholder="Nama Spesies">
+  <input type="text" name="lokasi" placeholder="Lokasi Observasi">
+  <input type="date" name="tanggal">
+  <button type="submit">Simpan Data</button>
+</body>
+</html>

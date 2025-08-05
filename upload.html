@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulir Upload - MapFloFa</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Upload Spesies Baru</h1>
+    <nav>
+      <a href="index.html">HOME</a>
+      <a href="tentang.html">TENTANG</a>
+      <a href="kegiatan.html">KEGIATAN</a>
+      <a href="flora.html">FLORA</a>
+      <a href="fauna.html">FAUNA</a>
+    </nav>
+  </header>
+
+  <main>
+    <form action="#" method="post" enctype="multipart/form-data">
+      <label for="jenis">Jenis (Flora/Fauna&kegiatan):</label><br />
+      <select id="jenis" name="jenis">
+        <option value="flora">Flora</option>
+        <option value="fauna">Fauna</option>
+		<option value="kegiatan">Kegiatan</option>
+      </select><br /><br />
+
+      <label for="nama">Nama Spesies:</label><br />
+      <input type="text" id="nama" name="nama" required /><br /><br />
+
+      <label for="nama_latin">Nama Latin:</label><br />
+      <input type="text" id="nama_latin" name= required /><br /><br />
+
+      <label for="deskripsi">Deskripsi:</label><br />
+      <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea><br /><br />
+
+      <label for="status">Status Konservasi:</label><br />
+      <input type="text" id="status" name="status" /><br /><br />
+
+      <label for="cites">Status CITES:</label><br />
+      <input type="text" id="cites" name="cites" /><br /><br />
+
+      <label for="referensi">Halaman Referensi Buku:</label><br />
+      <input type="text" id="referensi" name="referensi" /><br /><br />
+
+      <label for="lokasi">Lokasi Temuan:</label><br />
+      <input type="text" id="lokasi" name="lokasi" required /><br /><br />
+
+      <label for="gambar">Unggah Gambar:</label><br />
+      <input type="file" id="gambar" name="gambar" accept="image/*" /><br /><br />
+
+      <label for="peta">Unggah Peta Persebaran:</label><br />
+      <input type="file" id="peta" name="peta" accept="image/*" /><br /><br />
+
+      <input type="submit" value="Upload Spesies" />
+    </form>
+  </main>
+
+  <footer>
+    <p>© 2025 MapFloFa</p>
+  </footer>
+</body>
+</html>
