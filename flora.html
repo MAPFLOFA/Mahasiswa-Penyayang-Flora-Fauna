@@ -148,45 +148,39 @@
 </html><button onclick="window.print()">Cetak Halaman</button>
 <!-- Hero -->
 <header class="hero">
+  <!-- Hero -->
+<header class="hero">
   <h1>Kenali Flora Kalimantan</h1>
-  <p>Eksplorasi dan kontribusi data flora lokal!</p>
+  <p>Eksplorasi, identifikasi, dan kontribusikan penampakan tumbuhan!</p>
 </header>
 
-<!-- Filter -->
+<!-- Filter & Cari -->
 <section class="filter">
   <select name="jenis">
     <option>Pohon</option><option>Semak</option>
   </select>
-  <input type="text" placeholder="Cari nama atau ciri-ciri">
+  <input type="text" placeholder="Cari berdasarkan nama, ciri, habitat">
 </section>
 
-<!-- Grid Spesies -->
+<!-- Peta Interaktif -->
+<section id="map-section">
+  <h2>Peta Sebaran Flora</h2>
+  <div id="map" style="height: 400px;"></div>
+</section>
+
+<!-- Grid Katalog Spesies -->
 <section class="flora-grid">
-  <div class="flora-card" onclick="showDetail('ficus')">
-    <img src="assets/flora/ficus.jpg">
-    <h3>Ficus benjamina</h3>
-    <p>Pohon Beringin</p>
-  </div>
+  <!-- Ditampilkan dari data JSON -->
 </section>
 
-<!-- Detail Spesies (hidden, muncul saat klik) -->
-<section id="ficus-detail" class="flora-detail hidden">
-  <h2>Pohon Beringin</h2>
-  <ul>
-    <li><strong>Taksonomi:</strong> Plantae > ... > Ficus</li>
-    <li><strong>Ciri:</strong> Daun lonjong, buah kecil</li>
-    <li><strong>Habitat:</strong> Hutan kota</li>
-    <li><strong>Status:</strong> Umum</li>
-  </ul>
+<!-- Form Upload -->
+<section class="form-kontribusi">
+  <h2>Kontribusikan Penampakan Flora</h2>
+  <form id="uploadForm">
+    <input type="text" placeholder="Nama Ilmiah" required>
+    <input type="text" placeholder="Koordinat (Lat, Long)" required>
+    <input type="file" accept="image/*" required>
+    <textarea placeholder="Deskripsi atau ciri-ciri tambahan"></textarea>
+    <button type="submit">Kirim</button>
+  </form>
 </section>
-
-<!-- Form Kontribusi -->
-<form id="flora-form">
-  <input type="text" placeholder="Nama Ilmiah" required>
-  <select name="habitat"><option>Hutan</option></select>
-  <input type="file" name="foto">
-  <button type="submit">Kirim</button>
-</form>
-
-<!-- Peta Leaflet.js -->
-<section id="map"></section>
