@@ -18,19 +18,21 @@
   </header>
 
   <main>
-    <form action="#" method="post" enctype="multipart/form-data">
-      <label for="jenis">Jenis (Flora/Fauna&kegiatan):</label><br />
-      <select id="jenis" name="jenis">
+    <form name="form-upload" method="post" data-netlify="true" enctype="multipart/form-data">
+      <input type="hidden" name="form-name" value="form-upload" />
+
+      <label for="jenis">Jenis (Flora/Fauna/Kegiatan):</label><br />
+      <select id="jenis" name="jenis" required>
         <option value="flora">Flora</option>
         <option value="fauna">Fauna</option>
-		<option value="kegiatan">Kegiatan</option>
+        <option value="kegiatan">Kegiatan</option>
       </select><br /><br />
 
       <label for="nama">Nama Spesies:</label><br />
       <input type="text" id="nama" name="nama" required /><br /><br />
 
       <label for="nama_latin">Nama Latin:</label><br />
-      <input type="text" id="nama_latin" name= required /><br /><br />
+      <input type="text" id="nama_latin" name="nama_latin" required /><br /><br />
 
       <label for="deskripsi">Deskripsi:</label><br />
       <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea><br /><br />
@@ -62,3 +64,4 @@
   </footer>
 </body>
 </html>
+
