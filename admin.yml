@@ -1,0 +1,29 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "flora"
+    label: "Flora"
+    folder: "content/flora"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nama Ilmiah", name: "nama_ilmiah", widget: "string" }
+      - { label: "Nama Lokal", name: "nama_lokal", widget: "string" }
+      - { label: "Deskripsi", name: "deskripsi", widget: "text" }
+      - { label: "Gambar", name: "gambar", widget: "image" }
+
+  - name: "fauna"
+    label: "Fauna"
+    folder: "content/fauna"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nama Ilmiah", name: "nama_ilmiah", widget: "string" }
+      - { label: "Nama Lokal", name: "nama_lokal", widget: "string" }
+      - { label: "Deskripsi", name: "deskripsi", widget: "text" }
+      - { label: "Gambar", name: "gambar", widget: "image" }
