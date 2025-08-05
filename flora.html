@@ -1,12 +1,152 @@
-📁 flora/
-├── flora.html
-├── style.css
-├── script.js
-└── assets/
-    └── flora/
-        ├── orchidaceae.jpg
-        └── ficus.jpg
-        <!-- Hero -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Flora - MapFloFa</title>@media print {
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+
+  nav, footer, .galeri {
+    display: none; /* Sembunyikan elemen interaktif saat cetak */
+  }
+
+  main {
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3 {
+    color: #000;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 4px;
+  }
+}
+  <link rel="stylesheet" href="style.css".galeri {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.galeri img {
+  border-radius: 6px;
+  box-shadow: 0 0 8px #aaa;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+.galeri img:hover {
+  transform: scale(1.05);
+} />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head><script>
+  document.getElementById('filterFamily').addEventListener('change', function () {
+    const familyFilter = this.value.toLowerCase();
+    const cards = document.querySelectorAll('.flora-card, .fauna-card');
+
+    cards.forEach(card => {
+      const familyCell = card.querySelector('table').innerText.toLowerCase();
+      if (familyFilter === "semua" || familyCell.includes(familyFilter)) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+</script>
+<body>
+  <header>
+    <h1>Data Flora Kalimantan</h1>
+    <nav>
+      <a href="index.html">HOME</a>
+      <a href="tentang.html">TENTANG</a>
+      <a href="kegiatan.html">KEGIATAN</a>
+      <a href="flora.html">FLORA</a>
+      <a href="fauna.html">FAUNA</a>
+    </nav>
+  </header>
+
+  <main><h2>Filter Berdasarkan Family</h2>
+<select id="filterFamily">
+  <option value="semua">-- Semua Family --</option>
+  <option value="lythraceae">Lythraceae</option>
+  <option value="cercopithecidae">Cercopithecidae</option>
+  <!-- Tambahkan opsi lain sesuai daftar Family -->
+</select><h2>Galeri Flora</h2>
+<div class="galeri">
+  <img src="assets/img/bungur.jpg" alt="Bungur">
+  <img src="assets/img/anggrek.jpg" alt="Anggrek Hitam">
+  <img src="assets/img/ulin.jpg" alt="Pohon Ulin">
+</div>
+
+    <section id="bungur" class="flora-card">
+      <h2>Bungur (<i>Lagerstroemia speciosa</i>)</h2>
+      <img src="assets/img/bungur.jpg" alt="Foto Bungur">
+      <p><strong>Deskripsi:</strong> Tumbuhan tropis dengan bunga ungu mencolok. Umum di Asia Tenggara.</p>
+
+      <table>
+        <tr><th>Kingdom</th><td>Plantae</td></tr>
+        <tr><th>Family</th><td>Lythraceae</td></tr>
+        <tr><th>Genus</th><td>Lagerstroemia</td></tr>
+        <tr><th>Species</th><td>L. speciosa</td></tr>
+        <tr><th>Status Konservasi</th><td>Least Concern</td></tr>
+        <tr><th>CITES</th><td>Tidak Terdaftar</td></tr>
+        <tr><th>Referensi Hal. 106</th><td>Buku Flora Nusantara</td></tr>
+      </table>
+
+      <h3>Lokasi Temuan</h3>
+      <p>Samarinda Utara, Kalimantan Timur</p>
+      <div id="map-bungur" class="mapbox"></div>
+
+      <h3>Peta Persebaran</h3>
+      <img src="assets/maps/persebaran-bungur.jpg" alt="Peta persebaran Bungur">
+    </section>
+
+    <!-- Tambahkan flora berikutnya di bawah ini dengan struktur serupa -->
+
+  </main><input type="text" id="searchInput" placeholder="Cari spesies...">
+
+  <footer>
+    <p>© 2025 MapFloFa</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js">document.getElementById("form-spesies").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = [
+    ["Nama Spesies", "Lokasi", "Tanggal"],
+    [form.nama.value, form.lokasi.value, form.tanggal.value]
+  ];
+
+  let csv = data.map(row => row.join(",")).join("\n");
+  let blob = new Blob([csv], {type: "text/csv"});
+  let url = URL.createObjectURL(blob);
+
+  let link = document.getElementById("download-link");
+  link.href = url;
+  link.download = "data-spesies.csv";
+  link.style.display = "inline";
+  link.textContent = "Unduh Data CSV";
+});</script>
+  <script>
+    const mapBungur = L.map('map-bungur').setView([-0.5, 117.1], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(mapBungur);
+    L.marker([-0.5, 117.1]).addTo(mapBungur)
+      .bindPopup('Temuan Bungur di Samarinda Utara')
+      .openPopup();
+  </script><form id="form-spesies">
+  <input type="text" name="nama" placeholder="Nama Spesies">
+  <input type="text" name="lokasi" placeholder="Lokasi Observasi">
+  <input type="date" name="tanggal">
+  <button type="submit">Simpan Data</button>
+</form>
+<a id="download-link" style="display:none;">Unduh CSV</a>
+</body>
+</html><button onclick="window.print()">Cetak Halaman</button>
+<!-- Hero -->
 <header class="hero">
   <h1>Kenali Flora Kalimantan</h1>
   <p>Eksplorasi dan kontribusi data flora lokal!</p>
