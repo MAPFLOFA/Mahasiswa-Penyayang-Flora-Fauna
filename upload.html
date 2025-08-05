@@ -67,4 +67,19 @@
 
 <form name="form-upload" method="post" data-netlify="true" enctype="multipart/form-data">
   <input type="hidden" name="form-name" value="form-upload" />
+<form method="POST" data-netlify="true" ...>
+  <form name="form-upload" method="POST" data-netlify="true" enctype="multipart/form-data" action="/terima-kasih.html">
+  <input type="hidden" name="form-name" value="form-upload" />
+
+  <label>Judul:</label>
+  <input type="text" name="judul" required />
+
+  <label>Deskripsi:</label>
+  <textarea name="deskripsi" required></textarea>
+
+  <label>Gambar:</label>
+  <input type="file" name="gambar" accept="image/*" required />
+
+  <button type="submit">Kirim</button>
+</form>
 
