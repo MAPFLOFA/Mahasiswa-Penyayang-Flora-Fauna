@@ -163,3 +163,101 @@
 
 </body>
 </html>
+  <!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bungur (Lagerstroemia speciosa)</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #f5f5f0; color: #333; }
+    .hero { position: relative; }
+    .hero img { width: 100%; height: auto; }
+    .hero-text {
+      position: absolute; bottom: 20px; left: 20px;
+      background: rgba(0,0,0,0.5); color: #fff; padding: 10px 20px;
+      font-size: 2em; font-weight: bold;
+    }
+    .section { padding: 20px; border-bottom: 1px solid #ccc; }
+    .section h2 { margin-top: 0; color: #6a1b9a; }
+    .gallery img { width: 48%; margin: 1%; border-radius: 8px; }
+    .map { height: 300px; margin-top: 10px; }
+    .taxo, .notes { background: #ede7f6; padding: 10px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <img src="assets/bungur-hero.jpg" alt="Bungur Hero Image" />
+    <div class="hero-text">Bungur (Lagerstroemia speciosa)</div>
+  </div>
+
+  <!-- Deskripsi -->
+  <div class="section">
+    <h2>📝 Deskripsi</h2>
+    <p>Bungur adalah pohon berbunga ungu dari family Lythraceae. Bunganya mekar saat musim panas dan menjadi daya tarik visual di hutan sekunder dan taman kota.</p>
+  </div>
+
+  <!-- Galeri Foto -->
+  <div class="section gallery">
+    <h2>📷 Galeri</h2>
+    <img src="assets/bungur1.jpg" alt="Bunga Bungur" />
+    <img src="assets/bungur2.jpg" alt="Pohon Bungur" />
+  </div>
+
+  <!-- Taksonomi -->
+  <div class="section taxo">
+    <h2>🔍 Taksonomi</h2>
+    <ul>
+      <li><strong>Kingdom:</strong> Plantae</li>
+      <li><strong>Phylum:</strong> Tracheophyta</li>
+      <li><strong>Class:</strong> Magnoliopsida</li>
+      <li><strong>Order:</strong> Myrtales</li>
+      <li><strong>Family:</strong> Lythraceae</li>
+      <li><strong>Genus:</strong> Lagerstroemia</li>
+      <li><strong>Spesies:</strong> L. speciosa</li>
+    </ul>
+  </div>
+
+  <!-- Peta Titik Rekor -->
+  <div class="section">
+    <h2>📍 Titik Rekor Temuan</h2>
+    <div id="map-titik" class="map"></div>
+  </div>
+
+  <!-- Peta Sebaran -->
+  <div class="section">
+    <h2>🗺️ Sebaran Alami</h2>
+    <div id="map-sebaran" class="map"></div>
+  </div>
+
+  <!-- Catatan Kontributor -->
+  <div class="section notes">
+    <h2>🗒️ Catatan Kontributor</h2>
+    <p><strong>Acer (2025):</strong> Bungur tumbuh di tepi jalan Sungai Pinang, berbunga lebat saat musim kemarau.</p>
+    <p><strong>Rina (2024):</strong> Bungur ditemukan di taman kota Balikpapan, menarik perhatian karena warna bunganya.</p>
+  </div>
+
+  <!-- Leaflet Maps -->
+  <script>
+    const mapTitik = L.map('map-titik').setView([-0.5, 117.1], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapTitik);
+    L.marker([-0.484, 117.153]).addTo(mapTitik).bindPopup('Temuan Bungur oleh Acer');
+
+    const mapSebaran = L.map('map-sebaran').setView([-0.5, 117.1], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapSebaran);
+    L.polygon([
+      [-0.3, 116.9],
+      [-0.6, 117.0],
+      [-0.5, 117.4],
+      [-0.2, 117.3]
+    ], { color: 'purple' }).addTo(mapSebaran).bindPopup("Sebaran alami Bungur");
+  </script>
+
+</body>
+</html>
+  
+
