@@ -17,69 +17,39 @@
     </nav>
   </header>
 
-  <main>
-    <form name="form-upload" method="post" data-netlify="true" enctype="multipart/form-data">
-      <input type="hidden" name="form-name" value="form-upload" />
+    <label for="jenis">Jenis (Flora/Fauna/Kegiatan):</label><br />
+  <select id="jenis" name="jenis" required>
+    <option value="flora">Flora</option>
+    <option value="fauna">Fauna</option>
+    <option value="kegiatan">Kegiatan</option>
+  </select><br /><br />
 
-      <label for="jenis">Jenis (Flora/Fauna/Kegiatan):</label><br />
-      <select id="jenis" name="jenis" required>
-        <option value="flora">Flora</option>
-        <option value="fauna">Fauna</option>
-        <option value="kegiatan">Kegiatan</option>
-      </select><br /><br />
+  <label for="nama">Nama Spesies:</label><br />
+  <input type="text" id="nama" name="nama" required /><br /><br />
 
-      <label for="nama">Nama Spesies:</label><br />
-      <input type="text" id="nama" name="nama" required /><br /><br />
+  <label for="nama_latin">Nama Latin:</label><br />
+  <input type="text" id="nama_latin" name="nama_latin" required /><br /><br />
 
-      <label for="nama_latin">Nama Latin:</label><br />
-      <input type="text" id="nama_latin" name="nama_latin" required /><br /><br />
+  <label for="deskripsi">Deskripsi:</label><br />
+  <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea><br /><br />
 
-      <label for="deskripsi">Deskripsi:</label><br />
-      <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea><br /><br />
+  <label for="status">Status Konservasi:</label><br />
+  <input type="text" id="status" name="status" /><br /><br />
 
-      <label for="status">Status Konservasi:</label><br />
-      <input type="text" id="status" name="status" /><br /><br />
+  <label for="cites">Status CITES:</label><br />
+  <input type="text" id="cites" name="cites" /><br /><br />
 
-      <label for="cites">Status CITES:</label><br />
-      <input type="text" id="cites" name="cites" /><br /><br />
+  <label for="referensi">Halaman Referensi Buku:</label><br />
+  <input type="text" id="referensi" name="referensi" /><br /><br />
 
-      <label for="referensi">Halaman Referensi Buku:</label><br />
-      <input type="text" id="referensi" name="referensi" /><br /><br />
+  <label for="lokasi">Lokasi Temuan:</label><br />
+  <input type="text" id="lokasi" name="lokasi" required /><br /><br />
 
-      <label for="lokasi">Lokasi Temuan:</label><br />
-      <input type="text" id="lokasi" name="lokasi" required /><br /><br />
+  <label for="gambar">Unggah Gambar:</label><br />
+  <input type="file" id="gambar" name="gambar" accept="image/*" /><br /><br />
 
-      <label for="gambar">Unggah Gambar:</label><br />
-      <input type="file" id="gambar" name="gambar" accept="image/*" /><br /><br />
+  <label for="peta">Unggah Peta Persebaran:</label><br />
+  <input type="file" id="peta" name="peta" accept="image/*" /><br /><br />
 
-      <label for="peta">Unggah Peta Persebaran:</label><br />
-      <input type="file" id="peta" name="peta" accept="image/*" /><br /><br />
-
-      <input type="submit" value="Upload Spesies" />
-    </form>
-  </main>
-
-  <footer>
-    <p>© 2025 MapFloFa</p>
-  </footer>
-</body>
-</html>
-
-<form name="form-upload" method="post" data-netlify="true" enctype="multipart/form-data">
-  <input type="hidden" name="form-name" value="form-upload" />
-<form method="POST" data-netlify="true" ...>
-  <form name="form-upload" method="POST" data-netlify="true" enctype="multipart/form-data" action="/terima-kasih.html">
-  <input type="hidden" name="form-name" value="form-upload" />
-
-  <label>Judul:</label>
-  <input type="text" name="judul" required />
-
-  <label>Deskripsi:</label>
-  <textarea name="deskripsi" required></textarea>
-
-  <label>Gambar:</label>
-  <input type="file" name="gambar" accept="image/*" required />
-
-  <button type="submit">Kirim</button>
+  <input type="submit" value="Upload Spesies" />
 </form>
-
