@@ -1,0 +1,9 @@
+{
+  "Fabaceae": {
+    "Acacia": ["Acacia mangium", "Acacia auriculiformis"],
+    "Albizia": ["Albizia saman"]
+  },
+  "Arecaceae": {
+    "Elaeis": ["Elaeis guineensis"]
+  }
+}
