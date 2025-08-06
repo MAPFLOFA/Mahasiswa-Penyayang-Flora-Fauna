@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kegiatan Lapangan – Bukit Soeharto Maret 2025</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #fdfaf3; color: #333; }
+    .hero img { width: 100%; height: auto; }
+    .hero-text {
+      position: absolute; bottom: 20px; left: 20px;
+      background: rgba(0,0,0,0.5); color: #fff; padding: 10px 20px;
+      font-size: 1.8em; font-weight: bold;
+    }
+    .section { padding: 20px; border-bottom: 1px solid #ccc; }
+    .section h2 { margin-top: 0; color: #805c2e; }
+    .gallery img { width: 48%; margin: 1%; border-radius: 8px; }
+    .notes, .summary { background: #fff7e5; padding: 10px; border-radius: 8px; }
+    .map { height: 300px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- 📸 Hero -->
+  <div class="hero">
+    <img src="../../../assets/kegiatan-bukitsoeharto.jpg" alt="Kegiatan Lapangan Bukit Soeharto">
+    <div class="hero-text">Kegiatan Lapangan – Bukit Soeharto (Maret 2025)</div>
+  </div>
+
+  <!-- 📝 Ringkasan Kegiatan -->
+  <div class="section summary">
+    <h2>📝 Ringkasan</h2>
+    <p>Ekspedisi dokumentasi biodiversitas di hutan Bukit Soeharto selama 3 hari (21–23 Maret 2025). Fokus kegiatan mencakup pencatatan flora-fauna, rekaman audio-visual, dan pelatihan identifikasi lapangan bersama komunitas setempat.</p>
+  </div>
+
+  <!-- 🎥 Dokumentasi Galeri -->
+  <div class="section gallery">
+    <h2>🎥 Galeri Kegiatan</h2>
+    <img src="../../../assets/kegiatan1.jpg" alt="Tim identifikasi spesies">
+    <img src="../../../assets/kegiatan2.jpg" alt="Diskusi flora lokal">
+  </div>
+
+  <!-- 📍 Lokasi -->
+  <div class="section">
+    <h2>📍 Lokasi Kegiatan</h2>
+    <div id="map-lokasi" class="map"></div>
+  </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upload Dokumentasi Kegiatan</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    body { font-family: sans-serif; background: #fefcf6; padding: 30px; color: #333; }
+    h1 { color: #805c2e; }
+    form { background: #fff7e5; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; }
+    label { font-weight: bold; margin-top: 10px; display: block; }
+    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+    button { background: #805c2e; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #5e411f; }
+  </style>
+</head>
+<body>
+
+  <h1>📤 Upload Dokumentasi Kegiatan</h1>
+  <form onsubmit="event.preventDefault(); alert('Dokumentasi berhasil dikirim (simulasi)!');">
+
+    <label>📌 Judul Kegiatan</label>
+    <input type="text" placeholder="Contoh: Ekspedisi Bukit Soeharto Maret 2025" required />
+
+    <label>📅 Tanggal Kegiatan</label>
+    <input type="date" required />
+
+    <label>📍 Lokasi</label>
+    <input type="text" placeholder="Contoh: Bukit Soeharto, Kutai Kartanegara" required />
+
+    <label>📷 Upload Galeri Foto</label>
+    <input type="file" multiple accept="image/*" />
+
+    <label>🗒️ Catatan Kontributor</label>
+    <textarea rows="5" placeholder="Contoh: Observasi Shorea leprosula dan Herpestes aktif malam hari."></textarea>
+
+    <button type="submit">Kirim Dokumentasi</button>
+  </form>
+
+</body>
+</html>

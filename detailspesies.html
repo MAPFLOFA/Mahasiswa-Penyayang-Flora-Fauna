@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shorea macrophylla – Meranti Bunga</title>
+  <link rel="stylesheet" href="../../../../style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #f6faf5; color: #333; }
+    .hero img { width: 100%; height: auto; }
+    .hero-text {
+      position: absolute; bottom: 20px; left: 20px;
+      background: rgba(0,0,0,0.5); color: #fff; padding: 10px 20px;
+      font-size: 2em; font-weight: bold;
+    }
+    .section { padding: 20px; border-bottom: 1px solid #ccc; }
+    .section h2 { margin-top: 0; color: #376c3c; }
+    .gallery img { width: 48%; margin: 1%; border-radius: 8px; }
+    .taxo, .notes { background: #eafbea; padding: 10px; border-radius: 8px; }
+    .map { height: 300px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- 🌺 Hero -->
+  <div class="hero">
+    <img src="../../../../assets/shorea-macro-hero.jpg" alt="Shorea macrophylla Hero">
+    <div class="hero-text">Meranti Bunga (Shorea macrophylla)</div>
+  </div>
+
+  <!-- 📝 Deskripsi -->
+  <div class="section">
+    <h2>📝 Deskripsi</h2>
+    <p>Spesies pohon besar yang dikenal karena buah dan bunganya yang mencolok. Habitat asli di Kalimantan bagian tengah, umum dijumpai di lereng dan dataran rendah.</p>
+  </div>
+
+  <!-- 📷 Galeri -->
+  <div class="section gallery">
+    <h2>📷 Galeri</h2>
+    <img src="../../../../assets/shorea-macro1.jpg" alt="Buah Meranti Bunga">
+    <img src="../../../../assets/shorea-macro2.jpg" alt="Batang dan daun">
+  </div>
+
+  <!-- 🔍 Taksonomi -->
+  <div class="section taxo">
+    <h2>🔍 Taksonomi</h2>
+    <ul>
+      <li><strong>Kingdom:</strong> Plantae</li>
+      <li><strong>Phylum:</strong> Tracheophyta</li>
+      <li><strong>Class:</strong> Magnoliopsida</li>
+      <li><strong>Order:</strong> Malvales</li>
+      <li><strong>Family:</strong> Dipterocarpaceae</li>
+      <li><strong>Genus:</strong> Shorea</li>
+      <li><strong>Spesies:</strong> S. macrophylla</li>
+    </ul>
+  </div>
+
+  <!-- 📍 Titik Rekor -->
+  <div class="section">
+    <h2>📍 Titik Rekor Temuan</h2>
+    <div id="map-titik" class="map"></div>
+  </div>
+
+  <!-- 🗺️ Peta Sebaran -->
+  <div class="section">
+    <h2>🗺️ Sebaran Alami</h2>
+    <div id="map-sebaran" class="map"></div>
+  </div>
+
+  <!-- 🗒️ Catatan -->
+  <div class="section notes">
+    <h2>🗒️ Catatan Kontributor</h2>
+    <p><strong>Acer (2025):</strong> Ditemukan di lereng Bukit Lumut. Buah besar, kulit pohon mengkilap keperakan.</p>
+    <p><strong>Damar (2024):</strong> Sering dijumpai di perbukitan Sungai Belayan. Daun lebar dan tajuk rapat.</p>
+  </div>
+
+  <!-- 🗺️ Leaflet Maps -->
+  <script>
+    const mapTitik = L.map('map-titik').setView([-0.6, 117.0], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapTitik);
+    L.marker([-0.62, 116.95]).addTo(mapTitik).bindPopup('Temuan Shorea macrophylla oleh Acer');
+
+    const mapSebaran = L.map('map-sebaran').setView([-0.6, 117.0], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapSebaran);
+    L.polygon([
+      [-0.5, 116.8],
+      [-0.8, 116.9],
+      [-0.6, 117.2],
+      [-0.4, 117.1]
+    ], { color: 'forestgreen' }).addTo(mapSebaran).bindPopup("Sebaran alami S. macrophylla");
+  </script>
+
+</body>
+</html>
