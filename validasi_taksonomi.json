@@ -1,0 +1,8 @@
+{
+  "family": ["Dipterocarpaceae", "Fabaceae", "Rosaceae"],
+  "genus": {
+    "Dipterocarpaceae": ["Shorea", "Hopea", "Dipterocarpus"],
+    "Fabaceae": ["Acacia", "Albizia"],
+    "Rosaceae": ["Rosa", "Prunus"]
+  }
+}

@@ -2,54 +2,54 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Kegiatan - MapFloFa</title>
-  <link rel="stylesheet" href="style.css">
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+  <title>Kegiatan MapFloFa</title>
 </head>
 <body>
-  <header>
-    <h1>Kegiatan MapFloFa</h1>
-    <nav>
-      <a href="index.html">HOME</a>
-      <a href="tentang.html">TENTANG</a>
-      <a href="kegiatan.html">KEGIATAN</a>
-      <a href="flora.html">FLORA</a>
-      <a href="fauna.html">FAUNA</a>
-    </nav>
-  </header>
+  <h2>🏕️ Jenis Kegiatan</h2>
+  <ul>
+    <li><a href="kegiatan/edukasi.html">Edukasi</a></li>
+    <li><a href="kegiatan/eksplorasi.html">Eksplorasi</a></li>
+  </ul>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upload Dokumentasi Kegiatan</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    body { font-family: sans-serif; background: #fefcf6; padding: 30px; color: #333; }
+    h1 { color: #805c2e; }
+    form { background: #fff7e5; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; }
+    label { font-weight: bold; margin-top: 10px; display: block; }
+    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+    button { background: #805c2e; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #5e411f; }
+  </style>
+</head>
+<body>
 
-  <main>
-    <section class="kegiatan-card">
-      <img src="assets/img/petualangan-selayar.jpg" alt="Ekspedisi Selayar">
-      <h2>Ekspedisi Selayar</h2>
-      <p>Dokumentasi flora pesisir dan satwa liar di hutan bakau daerah Selayar, Kalimantan Timur.</p>
-      <div id="map-selayar" class="mapbox"></div>
-    </section>
-  </main>
+  <h1>📤 Upload Dokumentasi Kegiatan</h1>
+  <form onsubmit="event.preventDefault(); alert('Dokumentasi berhasil dikirim (simulasi)!');">
 
-  <footer>
-    <p>© MapFloFa 2025</p>
-  </footer>
+    <label>📌 Judul Kegiatan</label>
+    <input type="text" placeholder="Contoh: Ekspedisi Bukit Soeharto Maret 2025" required />
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  ></script>
-  <script>
-    var mapSelayar = L.map('map-selayar').setView([-1.255, 116.827], 10); // Ganti sesuai titik lokasi
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(mapSelayar);
-    L.marker([-1.255, 116.827]).addTo(mapSelayar)
-      .bindPopup('Lokasi Ekspedisi Selayar')
-      .openPopup();
-  </script></script>
-  <script><form id="form-spesies">
-  <input type="text" name="nama" placeholder="Nama Spesies">
-  <input type="text" name="lokasi" placeholder="Lokasi Observasi">
-  <input type="date" name="tanggal">
-  <button type="submit">Simpan Data</button>
+    <label>📅 Tanggal Kegiatan</label>
+    <input type="date" required />
+
+    <label>📍 Lokasi</label>
+    <input type="text" placeholder="Contoh: Bukit Soeharto, Kutai Kartanegara" required />
+
+    <label>📷 Upload Galeri Foto</label>
+    <input type="file" multiple accept="image/*" />
+
+    <label>🗒️ Catatan Kontributor</label>
+    <textarea rows="5" placeholder="Contoh: Observasi Shorea leprosula dan Herpestes aktif malam hari."></textarea>
+
+    <button type="submit">Kirim Dokumentasi</button>
+  </form>
+
 </body>
 </html>

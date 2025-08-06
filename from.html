@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontribusi FLOTA/FLOFA</title>
+  <script src="upload.js" defer></script>
+</head>
+<body>
+  <h2>Form Kontribusi</h2>
+  <label>Family:</label>
+  <input type="text" id="family" list="familyList" />
+  <datalist id="familyList"></datalist>
+
+  <label>Genus:</label>
+  <input type="text" id="genus" list="genusList" />
+  <datalist id="genusList"></datalist>
+
+  <label>Spesies:</label>
+  <input type="text" id="species" />
+
+  <label>Deskripsi:</label>
+  <textarea id="desc"></textarea>
+
+  <label>Foto:</label>
+  <input type="file" id="photo" accept="image/*" />
+
+  <button onclick="showPreview()">Preview</button>
+</body>
+</html>

@@ -17,40 +17,105 @@
     </nav>
   </header>
 
-    <label for="jenis">Jenis (Flora/Fauna/Kegiatan):</label><br />
-  <select id="jenis" name="jenis" required>
-    <option value="flora">Flora</option>
-    <option value="fauna">Fauna</option>
-    <option value="kegiatan">Kegiatan</option>
-  </select><br /><br />
+  <main>
+    <form action="#" method="post" enctype="multipart/form-data">
+      <label for="jenis">Jenis (Flora/Fauna&kegiatan):</label><br />
+      <select id="jenis" name="jenis">
+        <option value="flora">Flora</option>
+        <option value="fauna">Fauna</option>
+		<option value="kegiatan">Kegiatan</option>
+      </select><br /><br />
 
-  <label for="nama">Nama Spesies:</label><br />
-  <input type="text" id="nama" name="nama" required /><br /><br />
+      <label for="nama">Nama Spesies:</label><br />
+      <input type="text" id="nama" name="nama" required /><br /><br />
 
-  <label for="nama_latin">Nama Latin:</label><br />
-  <input type="text" id="nama_latin" name="nama_latin" required /><br /><br />
+      <label for="nama_latin">Nama Latin:</label><br />
+      <input type="text" id="nama_latin" name= required /><br /><br />
 
-  <label for="deskripsi">Deskripsi:</label><br />
-  <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea><br /><br />
+      <label for="deskripsi">Deskripsi:</label><br />
+      <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea><br /><br />
 
-  <label for="status">Status Konservasi:</label><br />
-  <input type="text" id="status" name="status" /><br /><br />
+      <label for="status">Status Konservasi:</label><br />
+      <input type="text" id="status" name="status" /><br /><br />
 
-  <label for="cites">Status CITES:</label><br />
-  <input type="text" id="cites" name="cites" /><br /><br />
+      <label for="cites">Status CITES:</label><br />
+      <input type="text" id="cites" name="cites" /><br /><br />
 
-  <label for="referensi">Halaman Referensi Buku:</label><br />
-  <input type="text" id="referensi" name="referensi" /><br /><br />
+      <label for="referensi">Halaman Referensi Buku:</label><br />
+      <input type="text" id="referensi" name="referensi" /><br /><br />
 
-  <label for="lokasi">Kordinat Lokasi Temuan:</label><br />
-  <input type="text" id="lokasi" name="lokasi" required /><br /><br />
+      <label for="lokasi">Lokasi Temuan:</label><br />
+      <input type="text" id="lokasi" name="lokasi" required /><br /><br />
 
-  <label for="gambar">Unggah Gambar:</label><br />
-  <input type="file" id="gambar" name="gambar" accept="image/*" /><br /><br />
+      <label for="gambar">Unggah Gambar:</label><br />
+      <input type="file" id="gambar" name="gambar" accept="image/*" /><br /><br />
 
-  <label for="peta">Unggah Peta Persebaran:</label><br />
-  <input type="file" id="peta" name="peta" accept="image/*" /><br /><br />
+      <label for="peta">Unggah Peta Persebaran:</label><br />
+      <input type="file" id="peta" name="peta" accept="image/*" /><br /><br />
 
-  <input type="submit" value="Upload Spesies" />
-</form>
+      <input type="submit" value="Upload Spesies" />
+    </form>
+  </main>
 
+  <footer>
+    <p>© 2025 MapFloFa</p>
+  </footer>
+</body>
+</html>
+<h2>🌿🐾 Kontribusi Flora/Fauna</h2>
+
+<label>📛 Nama Lokal</label>
+<input type="text" placeholder="Contoh: Meranti / Musang ekor pendek" required /><br /><br />
+
+<label>🧬 Nama Ilmiah</label>
+<input type="text" placeholder="Contoh: Shorea leprosula / Herpestes brachyurus" required /><br />
+
+<label>📝 Deskripsi Singkat</label>
+<textarea rows="4" placeholder="Contoh: Pohon tinggi ±15m, daun lebar. Aktif malam hari, berburu serangga."></textarea><br />
+
+<label>🧬 Taksonomi</label>
+<textarea rows="4" placeholder="Contoh:
+Kingdom: Plantae / Animalia
+Family: Dipterocarpaceae / Herpestidae
+Genus: Shorea / Herpestes
+Spesies: leprosula / brachyurus" required></textarea><br />
+
+<label>📊 Status Konservasi</label>
+<select required>
+  <option value="">-- Pilih Status --</option>
+  <option>IUCN - Least Concern (LC)</option>
+  <option>IUCN - Near Threatened (NT)</option>
+  <option>IUCN - Vulnerable (VU)</option>
+  <option>IUCN - Endangered (EN)</option>
+  <option>IUCN - Critically Endangered (CR)</option>
+  <option>IUCN - Data Deficient (DD)</option>
+  <option>Tidak Terdaftar</option>
+</select><br />
+
+<label>🛡️ Status CITES</label>
+<select>
+  <option value="">-- Pilih Status --</option>
+  <option>Appendix I</option>
+  <option>Appendix II</option>
+  <option>Appendix III</option>
+  <option>Tidak Terdaftar</option>
+</select><br />
+
+<label>📜 Status P.106 (Peraturan Menteri)</label>
+<select>
+  <option value="">-- Pilih Status --</option>
+  <option>DL - Dilindungi</option>
+  <option>TDL - Tidak Dilindungi</option>
+  <option>Belum Dicek</option>
+</select><br />
+
+<label>📍 Lokasi Temuan</label>
+<input type="text" placeholder="Contoh: Bukit Soeharto, Kalimantan Timur" required /><br />
+
+<label>📷 Upload Foto</label>
+<input type="file" multiple accept="image/*" /><br />
+
+<label>🔗 Referensi Tambahan (opsional)</label>
+<input type="url" placeholder="Contoh: https://florafauna.id/spesies/shorea-leprosula" /><br />
+
+<button type="submit">Kirim Kontribusi</button><br />
