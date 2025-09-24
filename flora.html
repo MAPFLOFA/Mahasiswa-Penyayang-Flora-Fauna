@@ -1,32 +1,126 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Flora Kalimantan</title>
+  <meta charset="utf-8" />
+  <title>Flora Kalimantan — Family</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
-  <h2>🌱 Family Flora Kalimantan</h2>
-  <ul>
-    <li><a href="flora/dipterocarpaceae.html">Dipterocarpaceae</a></li>
-    <li><a href="flora/myrtaceae.html">Myrtaceae</a></li>
-    <li><a href="flora/moraceae.html">Moraceae</a></li>
-  </ul>
+  <header>
+    <h1>Flora Kalimantan</h1>
+    <nav><a href="index.html">Home</a> · <a href="flora.html">Family</a> · <a href="titik.html">Peta Titik Temuan</a></nav>
+  </header>
 
-  <h3>Tambah Family atau Spesies Baru</h3>
-  <form action="upload.php" method="post" enctype="multipart/form-data">
-    <label>Nama Spesies/Family:</label><br>
-    <input type="text" name="nama"><br><br>
+  <main>
+    <section id="families">
+      <h2>Family Flora</h2>
+      <p>Pilih family untuk melihat daftar jenis atau unggah data baru.</p>
+      <div id="family-list"></div>
+    </section>
 
-    <label>Deskripsi:</label><br>
-    <textarea name="deskripsi"></textarea><br><br>
+    <section id="upload-section">
+      <h2>Upload Jenis Baru / Temuan</h2>
+      <form id="uploadForm">
+        <label>Family:
+          <select id="field-family" required>
+            <option value="">--Pilih Family--</option>
+            <option>Dipterocarpaceae</option>
+            <option>Myrtaceae</option>
+            <option>Moraceae</option>
+            <option>Fabaceae</option>
+            <option>Other</option>
+          </select>
+        </label>
 
-    <label>Upload Foto:</label><br>
-    <input type="file" name="gambar"><br><br>
+        <label>Nama Jenis (ilmiah): <input id="field-name" required placeholder="Genus species"></label>
 
-    <button type="submit">Upload</button>
-  </form>
+        <fieldset>
+          <legend>Klasifikasi (opsional)</legend>
+          <input id="f-kingdom" placeholder="Kingdom">
+          <input id="f-phylum" placeholder="Phylum">
+          <input id="f-class" placeholder="Class">
+          <input id="f-order" placeholder="Order">
+          <input id="f-family" placeholder="Family (ulang)">
+          <input id="f-genus" placeholder="Genus">
+        </fieldset>
+
+        <label>Deskripsi (ringkas): <textarea id="field-desc" rows="4"></textarea></label>
+
+        <label>Persebaran (teks): <input id="field-distr" placeholder="Sebaran / habitat"></label>
+
+        <label>Status Konservasi:
+          <select id="field-iucn">
+            <option value="">--Pilih--</option>
+            <option>LC (Least Concern)</option>
+            <option>NT (Near Threatened)</option>
+            <option>VU (Vulnerable)</option>
+            <option>EN (Endangered)</option>
+            <option>CR (Critically Endangered)</option>
+            <option>EW (Extinct in the Wild)</option>
+            <option>EX (Extinct)</option>
+            <option>DD (Data Deficient)</option>
+          </select>
+        </label>
+
+        <label>P.106 (Perlindungan): 
+          <select id="field-p106">
+            <option value="">--Pilih--</option>
+            <option>Dilindungi</option>
+            <option>Tidak Dilindungi</option>
+          </select>
+        </label>
+
+        <label>CITES:
+          <select id="field-cites">
+            <option value="">--Pilih--</option>
+            <option>CITES I</option>
+            <option>CITES II</option>
+            <option>CITES III</option>
+            <option>Tidak tercantum</option>
+          </select>
+        </label>
+
+        <label>Foto (boleh banyak, ukuran besar bisa menyebabkan storage penuh): 
+          <input id="field-photos" type="file" accept="image/*" multiple>
+        </label>
+
+        <label>Upload KML (koordinat/poligon/points) — file .kml (boleh banyak): 
+          <input id="field-kml" type="file" accept=".kml" multiple>
+        </label>
+
+        <small>Catatan: sistem menyimpan data pada browser (localStorage). Jika ingin publik/shared, kita butuh backend/server.</small><br>
+        <button type="submit">Simpan / Upload</button>
+      </form>
+    </section>
+
+    <section id="list-section">
+      <h2>Daftar Jenis (filterable)</h2>
+      <label>Filter Family: 
+        <select id="filter-family">
+          <option value="">Semua</option>
+          <option>Dipterocarpaceae</option>
+          <option>Myrtaceae</option>
+          <option>Moraceae</option>
+          <option>Fabaceae</option>
+          <option>Other</option>
+        </select>
+      </label>
+      <div id="species-cards"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>MAPFLOFA — Demo local</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="js/flora_app.js"></script>
 </body>
 </html>
+
+
 
 
 
