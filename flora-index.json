@@ -1,9 +1,3 @@
-{
-  "Fabaceae": {
-    "Acacia": ["Acacia mangium", "Acacia auriculiformis"],
-    "Albizia": ["Albizia saman"]
-  },
-  "Arecaceae": {
-    "Elaeis": ["Elaeis guineensis"]
-  }
-}
+<!-- ganti baris CSS/JS jadi: -->
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/flora_app.js" defer></script>
