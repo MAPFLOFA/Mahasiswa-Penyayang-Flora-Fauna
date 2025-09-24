@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Detail Jenis</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>#map,{height:300px;}#mapPoints{height:300px;}</style>
+</head>
+<body>
+  <header><a href="flora.html">← Kembali ke Family</a></header>
+  <main>
+    <h1 id="sp-title">Nama Jenis</h1>
+    <div id="photos"></div>
+
+    <h3>Klasifikasi</h3>
+    <ul id="classification"></ul>
+
+    <h3>Deskripsi</h3>
+    <p id="desc"></p>
+
+    <h3>Persebaran (teks)</h3>
+    <p id="distr"></p>
+
+    <h3>Status</h3>
+    <p id="iucn"></p>
+    <p id="p106"></p>
+    <p id="cites"></p>
+
+    <h3>Peta Persebaran (dari KML)</h3>
+    <div id="map" style="height:350px;"></div>
+
+    <h3>Titik Lokasi Temuan</h3>
+    <div id="mapPoints" style="height:350px;"></div>
+    <p><a id="googlelink" href="#" target="_blank">Buka di Google Maps (titik pertama)</a></p>
+  </main>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="js/flora_app.js"></script>
+</body>
+</html>
