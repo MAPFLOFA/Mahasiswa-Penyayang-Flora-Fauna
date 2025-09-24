@@ -11,8 +11,23 @@
     <li><a href="flora/myrtaceae.html">Myrtaceae</a></li>
     <li><a href="flora/moraceae.html">Moraceae</a></li>
   </ul>
+
+  <h3>Tambah Family atau Spesies Baru</h3>
+  <form action="upload.php" method="post" enctype="multipart/form-data">
+    <label>Nama Spesies/Family:</label><br>
+    <input type="text" name="nama"><br><br>
+
+    <label>Deskripsi:</label><br>
+    <textarea name="deskripsi"></textarea><br><br>
+
+    <label>Upload Foto:</label><br>
+    <input type="file" name="gambar"><br><br>
+
+    <button type="submit">Upload</button>
+  </form>
 </body>
 </html>
+
 
 
 
