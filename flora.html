@@ -23,20 +23,9 @@
     <section id="upload-section">
       <h2>Upload Jenis Baru / Temuan</h2>
       <form id="uploadForm">
-        <label>Family:
-          <select id="field-family" required>
-            <option value="">--Pilih Family--</option>
-            <option>Dipterocarpaceae</option>
-            <option>Myrtaceae</option>
-            <option>Moraceae</option>
-            <option>Fabaceae</option>
-            <option>Apocynaceae</option>
-            <option>Other</option>
-          </select>
-        </label>
-
         <label>Nama Jenis (ilmiah): <input id="field-name" required placeholder="Genus species"></label>
-
+        <label>Nama Lokal (ilmiah): <input id="field-name"></label>
+        
         <fieldset>
           <legend>Klasifikasi (opsional)</legend>
           <input id="f-kingdom" placeholder="Kingdom">
@@ -145,6 +134,7 @@
     .card:hover { box-shadow: 0 0 5px rgba(0,0,0,0.2); }
     .card a { text-decoration: none; color: #2e7d32; font-weight: bold; }
   </style>
+
 
 
 
