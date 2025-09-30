@@ -1,1 +1,161 @@
-const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSbaeJ5hXMMBW73nlY26ZOogUXY5xNesVvbGnWAzOoX6l3yqOtpABGfumMo1QsHgOupSjE-dBvj5W-l/pubhtml";
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Flora Kalimantan — Detail Spesies</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin:20px; line-height:1.6; }
+    h1 { color: #2e7d32; }
+    #map { height: 400px; margin-top: 15px; border-radius: 8px; }
+    .gallery img { max-width: 200px; border-radius: 8px; margin: 5px; }
+    .taxonomy { background: #f0fff0; padding: 15px; border-radius: 8px; margin: 15px 0; }
+    .taxonomy table { border-collapse: collapse; width: 100%; }
+    .taxonomy td { padding: 5px; border-bottom: 1px solid #ddd; }
+    .taxonomy td:first-child { font-weight: bold; width: 120px; }
+    .nav-list { margin-bottom: 20px; }
+    .nav-list a { margin-right: 10px; color: #2e7d32; text-decoration: none; }
+    .nav-list a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="nav-list">
+    <a href="index.html">Home</a>
+    <a href="family.html">Family</a>
+    <a href="upload.html">Upload</a>
+  </div>
+
+  <h1 id="spesies-title">Loading...</h1>
+  <h3 id="famili-genus"></h3>
+
+  <div class="taxonomy">
+    <h2>Taksonomi</h2>
+    <table id="tabel-taksonomi"></table>
+  </div>
+
+  <p><b>Nama Lokal:</b> <span id="nama-lokal"></span></p>
+  <p><b>Status IUCN:</b> <span id="status-iucn"></span></p>
+  <p><b>CITES:</b> <span id="cites"></span></p>
+  <p><b>P.106:</b> <span id="p106"></span></p>
+  <p><b>Deskripsi:</b> <span id="deskripsi"></span></p>
+  <p><b>Sebaran (teks):</b> <span id="sebaran-teks"></span></p>
+
+  <div class="gallery" id="foto-gallery"></div>
+
+  <h2>Peta Sebaran</h2>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // URL CSV dari Google Sheets
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSbaeJ5hXMMBW73nlY26ZOogUXY5xNesVvbGnWAzOoX6l3yqOtpABGfumMo1QsHgOupSjE-dBvj5W-l/pub?output=csv";
+
+    async function fetchCsv(url) {
+      const resp = await fetch(url);
+      const text = await resp.text();
+      const lines = text.trim().split("\\n");
+      const header = lines[0].split(",");
+      const rows = lines.slice(1).map(line => {
+        const parts = line.split(",");
+        let obj = {};
+        header.forEach((h, idx) => {
+          obj[h.trim()] = parts[idx] ? parts[idx].trim() : "";
+        });
+        return obj;
+      });
+      return rows;
+    }
+
+    // Fungsi untuk tampil detail spesies
+    function renderDetail(obj) {
+      document.getElementById("spesies-title").textContent = obj["Nama Latin"];
+      document.getElementById("famili-genus").innerHTML = `${obj["Famili"]} — <i>${obj["Genus"]}</i>`;
+
+      // Taksonomi
+      const takson = [
+        ["Kingdom", obj["Kingdom"]],
+        ["Divisi", obj["Divisi"]],
+        ["Kelas", obj["Kelas"]],
+        ["Ordo", obj["Ordo"]],
+        ["Famili", obj["Famili"]],
+        ["Genus", obj["Genus"]],
+        ["Spesies", obj["Nama Latin"]]
+      ];
+      let tHtml = takson.map(t => `<tr><td>${t[0]}</td><td>${t[1] || ""}</td></tr>`).join("");
+      document.getElementById("tabel-taksonomi").innerHTML = tHtml;
+
+      document.getElementById("nama-lokal").textContent = obj["Nama Lokal"];
+      document.getElementById("status-iucn").textContent = obj["IUCN"];
+      document.getElementById("cites").textContent = obj["CITES"];
+      document.getElementById("p106").textContent = obj["P-106"];
+      document.getElementById("deskripsi").textContent = obj["Deskripsi"];
+      document.getElementById("sebaran-teks").textContent = obj["Persebaran"];
+
+      // Foto gallery
+      const gallery = document.getElementById("foto-gallery");
+      gallery.innerHTML = "";
+      if (obj["Foto"]) {
+        let fotos = obj["Foto"].split(";");
+        fotos.forEach(f => {
+          f = f.trim();
+          if (f) {
+            const img = document.createElement("img");
+            img.src = f;
+            gallery.appendChild(img);
+          }
+        });
+      }
+
+      // Peta
+      const map = L.map('map').setView([0, 0], 2);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+      }).addTo(map);
+
+      // Koordinat titik
+      if (obj["Latitud"] && obj["Longitud"]) {
+        let pairs = obj["Latitud"] + "," + obj["Longitud"];
+        // kalau banyak titik, bisa ubah format penyimpanan ke "lat1,lng1;lat2,lng2;..."
+        let coords = pairs.split(";");
+        coords.forEach(pair => {
+          let parts = pair.split(",");
+          if (parts.length === 2) {
+            let lat = parseFloat(parts[0]);
+            let lng = parseFloat(parts[1]);
+            L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 6);
+          }
+        });
+      }
+    }
+
+    // Ambil id spesies dari query param URL ?sp=nama
+    function getQueryParam(param) {
+      let urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    async function init() {
+      const data = await fetchCsv(sheetUrl);
+      const sp = getQueryParam("sp"); // misalnya ?sp=Shorea leprosula
+      let obj = null;
+
+      if (sp) {
+        // cari spesies berdasarkan Nama Latin
+        obj = data.find(r => r["Nama Latin"] === sp);
+      } else {
+        // kalau tidak ada param, ambil baris pertama sebagai default
+        obj = data[0];
+      }
+
+      if (obj) {
+        renderDetail(obj);
+      } else {
+        document.getElementById("spesies-title").textContent = "Spesies tidak ditemukan";
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
