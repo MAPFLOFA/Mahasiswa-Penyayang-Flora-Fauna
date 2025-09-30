@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Flora Kalimantan — Family</title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    .kategori { margin: 20px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 15px; }
+    .card { background: #f0fff0; border: 1px solid #cfc; border-radius: 8px; padding: 10px; text-align: center; }
+    .card a { text-decoration: none; color: #2e7d32; font-weight: bold; }
+    .card a:hover { color: #1b5e20; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Flora Kalimantan</h1>
+    <nav>
+      <a href="index.html">Home</a> · 
+      <a href="family.html">Family</a> · 
+      <a href="flora.html">Upload</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Daftar Family</h2>
+    <div class="kategori">
+      <div class="grid">
+        <!-- Contoh: Dipterocarpaceae -->
+        <div class="card">
+          <a href="#dipterocarpaceae" onclick="showGenus('dipterocarpaceae')">Dipterocarpaceae</a>
+        </div>
+        <!-- Contoh: Myrtaceae -->
+        <div class="card">
+          <a href="#myrtaceae" onclick="showGenus('myrtaceae')">Myrtaceae</a>
+        </div>
+        <!-- Tambahkan family lain di sini -->
+      </div>
+    </div>
+
+    <!-- Daftar Genus per Family -->
+    <section id="genus-section">
+      <h2 id="genus-title">Pilih Family untuk melihat Genus</h2>
+      <div id="genus-list" class="grid"></div>
+    </section>
+
+    <!-- Daftar Spesies per Genus -->
+    <section id="species-section" style="margin-top:30px;">
+      <h2 id="species-title">Pilih Genus untuk melihat Spesies</h2>
+      <div id="species-list" class="grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Flora Kalimantan</p>
+  </footer>
+
+  <script>
+    // Data dummy: bisa kamu ganti dengan database/json nanti
+    const data = {
+      dipterocarpaceae: {
+        name: "Dipterocarpaceae",
+        genus: {
+          Shorea: ["Shorea leprosula", "Shorea parvifolia", "Shorea johorensis"],
+          Dipterocarpus: ["Dipterocarpus cornutus", "Dipterocarpus grandiflorus"]
+        }
+      },
+      myrtaceae: {
+        name: "Myrtaceae",
+        genus: {
+          Syzygium: ["Syzygium aromaticum", "Syzygium malaccense"],
+          Eugenia: ["Eugenia uniflora"]
+        }
+      }
+    };
+
+    function showGenus(familyKey) {
+      const family = data[familyKey];
+      document.getElementById("genus-title").innerText = "Genus dalam Family: " + family.name;
+      const genusList = document.getElementById("genus-list");
+      genusList.innerHTML = "";
+
+      for (const genus in family.genus) {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<a href="#${genus}" onclick="showSpecies('${familyKey}','${genus}')">${genus}</a>`;
+        genusList.appendChild(div);
+      }
+
+      // Kosongkan species section
+      document.getElementById("species-title").innerText = "Pilih Genus untuk melihat Spesies";
+      document.getElementById("species-list").innerHTML = "";
+    }
+
+    function showSpecies(familyKey, genusName) {
+      const family = data[familyKey];
+      const speciesArr = family.genus[genusName];
+
+      document.getElementById("species-title").innerText = "Spesies dalam Genus: " + genusName;
+      const speciesList = document.getElementById("species-list");
+      speciesList.innerHTML = "";
+
+      speciesArr.forEach(sp => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<a href="flora/${sp.replace(/\\s+/g,'_').toLowerCase()}.html">${sp}</a>`;
+        speciesList.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
