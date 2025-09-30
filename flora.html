@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Judul Halaman</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <!-- isi konten halaman -->
-<!DOCTYPE html>
-<html lang="id">
-<head>
   <meta charset="utf-8" />
   <title>Flora Kalimantan — Family</title>
   <link rel="stylesheet" href="css/style.css">
@@ -19,21 +10,32 @@
 <body>
   <header>
     <h1>Flora Kalimantan</h1>
-    <nav><a href="index.html">Home</a> · <a href="halamn html">Family</a> · <a href="flora.html">UPLOAD</a></nav>
+    <nav>
+      <a href="index.html">Home</a> · 
+      <a href="family.html">Family</a> · 
+      <a href="flora.html">Upload</a>
+    </nav>
   </header>
 
   <main>
+    <!-- Family Section -->
     <section id="families">
       <h2>Family Flora</h2>
       <p>Pilih family untuk melihat daftar jenis atau unggah data baru.</p>
       <div id="family-list"></div>
     </section>
 
+    <!-- Upload Section -->
     <section id="upload-section">
       <h2>Upload Jenis Baru / Temuan</h2>
       <form id="uploadForm">
-        <label>Nama Jenis (ilmiah): <input id="field-name" required placeholder="Genus species"></label>
-        <label>Nama Lokal (ilmiah): <input id="field-name"></label>
+        <label>Nama Jenis (ilmiah): 
+          <input id="field-name" required placeholder="Genus species">
+        </label>
+
+        <label>Nama Lokal: 
+          <input id="field-local">
+        </label>
         
         <fieldset>
           <legend>Klasifikasi (opsional)</legend>
@@ -41,13 +43,17 @@
           <input id="f-phylum" placeholder="Phylum">
           <input id="f-class" placeholder="Class">
           <input id="f-order" placeholder="Order">
-          <input id="f-family" placeholder="Family (ulang)">
+          <input id="f-family" placeholder="Family">
           <input id="f-genus" placeholder="Genus">
         </fieldset>
 
-        <label>Deskripsi (ringkas): <textarea id="field-desc" rows="4"></textarea></label>
+        <label>Deskripsi (ringkas): 
+          <textarea id="field-desc" rows="4"></textarea>
+        </label>
 
-        <label>Persebaran (teks): <input id="field-distr" placeholder="Sebaran / habitat"></label>
+        <label>Persebaran (teks): 
+          <input id="field-distr" placeholder="Sebaran / habitat">
+        </label>
 
         <label>Status Konservasi:
           <select id="field-iucn">
@@ -81,11 +87,11 @@
           </select>
         </label>
 
-        <label>Foto (boleh banyak, ukuran besar bisa menyebabkan storage penuh): 
+        <label>Foto: 
           <input id="field-photos" type="file" accept="image/*" multiple>
         </label>
 
-        <label>Upload KML (koordinat/poligon/points) — file .kml (boleh banyak): 
+        <label>Upload KML: 
           <input id="field-kml" type="file" accept=".kml" multiple>
         </label>
 
@@ -94,17 +100,11 @@
       </form>
     </section>
 
+    <!-- List Section -->
     <section id="list-section">
       <h2>Daftar Jenis (filterable)</h2>
       <label>Filter Family: 
         <select id="filter-family">
-          <option<div class="kategori">
-          <div class="grid">
-          <div class="card"><a href="flora/dipterocarpaceae.html">Dipterocarpaceae</a></div>
-          <div class="card"><a href="flora/myrtaceae.html">Myrtaceae</a></div>
-          <div class="card"><a href="flora/moraceae.html">Moraceae</a></div>
-          <!-- Tambahkan family lain di sini -->
-        </div>
           <option>Dipterocarpaceae</option>
           <option>Myrtaceae</option>
           <option>Moraceae</option>
@@ -113,17 +113,25 @@
           <option>Other</option>
         </select>
       </label>
+
+      <div class="kategori">
+        <div class="grid">
+          <div class="card"><a href="flora/dipterocarpaceae.html">Dipterocarpaceae</a></div>
+          <div class="card"><a href="flora/myrtaceae.html">Myrtaceae</a></div>
+          <div class="card"><a href="flora/moraceae.html">Moraceae</a></div>
+          <!-- Tambahkan family lain di sini -->
+        </div>
+      </div>
+
       <div id="species-cards"></div>
     </section>
   </main>
 
   <footer>
-    <p>https://docs.google.com/document/d/1t6k_fT-RN68rzwH8HCFTUacl25SRhrC4BobA4a61DYU/edit?usp=drive_link</p>
+    <p>&copy; 2025 Flora Kalimantan</p>
   </footer>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="js/flora_app.js"></script>
 </body>
 </html>
-
-
