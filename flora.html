@@ -1,114 +1,235 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Detail Spesies</title>
+  <meta charset="utf-8" />
+  <title>Flora Kalimantan — Browser Taksonomi</title>
+
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <style>
-    body { font-family: Arial, sans-serif; margin:20px; line-height:1.6; }
-    h1 { color: #2e7d32; }
-    #map { height: 400px; margin-top: 15px; border-radius: 8px; }
-    .gallery img { max-width: 200px; border-radius: 8px; margin: 5px; }
-    .taxonomy { background: #f0fff0; padding: 15px; border-radius: 8px; margin: 15px 0; }
-    .taxonomy table { border-collapse: collapse; width: 100%; }
-    .taxonomy td { padding: 5px; border-bottom: 1px solid #ddd; }
-    .taxonomy td:first-child { font-weight: bold; width: 120px; }
+    :root{--green:#2e7d32;--bg:#f0fff0}
+    body{font-family: 'Segoe UI', Tahoma, sans-serif; margin:0; background:var(--bg); color:#111}
+    header{padding:18px 20px; background:#eaf7ea; border-bottom:1px solid #d6efd6}
+    header h1{margin:0;color:var(--green)}
+    .container{display:grid; grid-template-columns:280px 280px 1fr; gap:12px; padding:18px; align-items:start}
+    .card{background:#fff; border-radius:8px; padding:12px; box-shadow:0 0 0 1px rgba(34,139,34,0.03);}
+    .list-item{padding:8px;border-radius:6px; cursor:pointer; color:var(--green); margin-bottom:6px; border:1px solid #e6f3e6; text-align:center}
+    .list-item:hover{background:#e8f5e9}
+    .list-item.active{background:var(--green); color:white; box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+    #detail { padding:12px; }
+    .taxonomy{background:#f7fff7;padding:10px;border-radius:6px;margin-bottom:10px}
+    .meta{font-size:0.95em;margin-bottom:6px}
+    .gallery img{max-width:140px;border-radius:6px;margin:6px}
+    #map{height:360px;border-radius:6px}
+    .small{font-size:0.9em;color:#555}
+    .breadcrumb{padding:10px 18px; font-size:0.95em}
+    .btn{display:inline-block;padding:6px 10px;border-radius:6px;background:var(--green);color:#fff;text-decoration:none}
+    @media (max-width:900px){ .container{grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
-  <h1 id="namaSpesies"></h1>
-  <h3 id="familiGenus"></h3>
+  <header>
+    <h1>Flora Kalimantan — Browser Taksonomi</h1>
+    <div class="small">Family → Genus → Spesies — klik untuk menurunkan sampai ke detail</div>
+  </header>
 
-  <!-- Taksonomi -->
-  <div class="taxonomy">
-    <h2>Taksonomi</h2>
-    <table id="tabelTaksonomi"></table>
+  <div class="breadcrumb" id="breadcrumb"></div>
+
+  <div class="container">
+    <!-- Families -->
+    <div class="card" id="familiesCard">
+      <h3>Family</h3>
+      <div id="familiesList"></div>
+    </div>
+
+    <!-- Genus -->
+    <div class="card" id="genusCard">
+      <h3>Genus</h3>
+      <div id="genusList">Pilih Family terlebih dahulu</div>
+    </div>
+
+    <!-- Species & Detail -->
+    <div class="card" id="rightCol">
+      <div id="speciesListWrap">
+        <h3>Species</h3>
+        <div id="speciesList">Pilih Genus terlebih dahulu</div>
+      </div>
+
+      <hr style="margin:12px 0">
+
+      <div id="detail">
+        <h2 id="title">Pilih spesies untuk melihat detail</h2>
+        <div id="metaWrap" class="small"></div>
+
+        <div class="taxonomy" id="taxo"></div>
+
+        <p><b>Nama Lokal:</b> <span id="localName"></span></p>
+        <p><b>Status IUCN:</b> <span id="iucn"></span> &nbsp; <b>CITES:</b> <span id="cites"></span> &nbsp; <b>P.106:</b> <span id="p106"></span></p>
+
+        <p><b>Deskripsi:</b><br><span id="desc"></span></p>
+        <p><b>Sebaran (teks):</b> <span id="sebaranText"></span></p>
+
+        <div class="gallery" id="gallery"></div>
+
+        <h3>Peta Sebaran</h3>
+        <div id="map"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- Deskripsi -->
-  <p><b>Deskripsi:</b> <span id="deskripsi"></span></p>
-
-  <!-- Foto -->
-  <div class="gallery" id="fotoGallery"></div>
-
-  <!-- Peta -->
-  <h2>Peta Sebaran</h2>
-  <div id="map"></div>
-
+  <!-- Leaflet -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
   <script>
-    // Ganti dengan ID Google Sheets kamu (File > Bagikan > Publikasikan ke web > CSV)
-    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-XXXXX/pub?output=csv";
+  // --------------- CONFIG ---------------
+  // Ganti URL ini kalau sheets-mu beda
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSbaeJ5hXMMBW73nlY26ZOogUXY5xNesVvbGnWAzOoX6l3yqOtpABGfumMo1QsHgOupSjE-dBvj5W-l/pub?output=csv";
 
-    async function loadData() {
-      let response = await fetch(sheetUrl);
-      let text = await response.text();
+  // nama kolom yang dipakai (case-insensitive mapping)
+  const COLS = {
+    kingdom: "kingdom",
+    divisi: "divisi",
+    kelas: "kelas",
+    ordo: "ordo",
+    famili: "famili",
+    genus: "genus",
+    nama_latin: "nama latin",
+    nama_lokal: "nama lokal",
+    iucn: "iucn",
+    cites: "cites",
+    p106: "p-106",
+    deskripsi: "deskripsi",
+    persebaran: "persebaran",
+    latitud: "latitud",
+    longitud: "longitud",
+    foto: "foto"
+  };
 
-      // parsing CSV sederhana
-      let rows = text.split("\n").map(r => r.split(","));
-      let header = rows[0];
-      let data = rows[1]; // ambil baris pertama data
-
-      let obj = {};
-      header.forEach((h, i) => { obj[h.trim()] = data[i] });
-
-      // Set Judul
-      document.getElementById("namaSpesies").textContent = obj["Spesies"];
-      document.getElementById("familiGenus").innerHTML = `<i>${obj["Genus"]}</i> (${obj["Famili"]})`;
-
-      // Isi Taksonomi
-      let taksonomi = [
-        ["Kingdom", obj["Kingdom"]],
-        ["Phylum", obj["Phylum"]],
-        ["Class", obj["Class"]],
-        ["Order", obj["Order"]],
-        ["Family", obj["Famili"]],
-        ["Genus", obj["Genus"]],
-        ["Spesies", obj["Spesies"]]
-      ];
-
-      let tableHTML = taksonomi.map(t => `<tr><td>${t[0]}</td><td>${t[1]}</td></tr>`).join("");
-      document.getElementById("tabelTaksonomi").innerHTML = tableHTML;
-
-      // Deskripsi
-      document.getElementById("deskripsi").textContent = obj["Deskripsi"];
-
-      // Foto
-      if (obj["Foto URL"]) {
-        let fotos = obj["Foto URL"].split(";");
-        fotos.forEach(f => {
-          let img = document.createElement("img");
-          img.src = f.trim();
-          document.getElementById("fotoGallery").appendChild(img);
-        });
+  // --------------- HELPERS ---------------
+  // CSV parser (menghandle quotes)
+  function parseCSV(text){
+    const rows = [];
+    const re = /(?:\\s*\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"\\s*|([^,]*))(,|$)/g;
+    const lines = text.split(/\\r?\\n/);
+    for (let line of lines){
+      if (!line) continue;
+      const row = [];
+      let match;
+      let idx=0;
+      re.lastIndex = 0;
+      while ((match = re.exec(line)) !== null){
+        // match[1] => quoted, match[2] => unquoted
+        let val = match[1] !== undefined ? match[1].replace(/\\\\"/g,'"') : match[2];
+        row.push(val === undefined ? "" : val);
+        idx++;
+        if (match[3] === "") break; // end of line
       }
+      // If simple split works and parser failed, fallback:
+      if (row.length === 0) row.push(...line.split(","));
+      rows.push(row);
+    }
+    return rows;
+  }
 
-      // Peta
-      var map = L.map('map').setView([0, 117], 6);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
-      }).addTo(map);
+  function normalizeHeader(h){
+    return h.trim().toLowerCase().replace(/\\s+/g," ");
+  }
 
-      if (obj["Koordinat"]) {
-        let coords = obj["Koordinat"].split(";");
-        coords.forEach(c => {
-          let parts = c.trim().split(",");
-          if (parts.length === 2) {
-            L.marker([parseFloat(parts[0]), parseFloat(parts[1])]).addTo(map);
-          }
+  function getColIndex(headers, nameVariants){
+    // nameVariants: array of possible header names (normalized)
+    for (let i=0;i<headers.length;i++){
+      let h = normalizeHeader(headers[i]);
+      if (nameVariants.includes(h)) return i;
+    }
+    return -1;
+  }
+
+  // parse coordinate formats:
+  // - single lat in Latitud column and single long in Longitud column
+  // - or multiple points stored as "lat1,long1;lat2,long2"
+  function extractPoints(row, colIdxLat, colIdxLong){
+    let points = [];
+    if (colIdxLat >=0 && colIdxLong >=0){
+      const latCell = (row[colIdxLat]||"").trim();
+      const longCell = (row[colIdxLong]||"").trim();
+      // If combined as "lat1;lat2" and "long1;long2" OR as "lat1,long1;lat2,long2" in lat cell
+      if (latCell && longCell && latCell.includes(";") && !longCell.includes(";")){
+        const lats = latCell.split(";").map(s=>s.trim());
+        const longs = longCell.split(";").map(s=>s.trim());
+        for (let i=0;i<lats.length;i++){
+          if (lats[i] && longs[i]) points.push([parseFloat(lats[i]), parseFloat(longs[i])]);
+        }
+      } else if (latCell && latCell.includes(";") && !longCell){ // maybe combined pairs in latCell
+        latCell.split(";").forEach(pair=>{
+          pair = pair.trim();
+          if (!pair) return;
+          const p = pair.split(",");
+          if (p.length===2) points.push([parseFloat(p[0]), parseFloat(p[1])]);
         });
-      }
-
-      if (obj["GeoJSON URL"]) {
-        fetch(obj["GeoJSON URL"])
-          .then(res => res.json())
-          .then(data => {
-            L.geoJSON(data, {style:{color:"green",fillOpacity:0.3}}).addTo(map);
-          });
+      } else if (latCell && longCell){
+        // single pair
+        const lat = parseFloat(latCell);
+        const lng = parseFloat(longCell);
+        if (!isNaN(lat) && !isNaN(lng)) points.push([lat, lng]);
+      } else {
+        // no coords
       }
     }
+    return points;
+  }
 
-    loadData();
-  </script>
-</body>
-</html>
+  // split foto cell by ; or , but prefer ;
+  function extractFotos(cell){
+    if(!cell) return [];
+    // sometimes Google Sheets output contains commas inside URLs — use semicolon primarily
+    const s = cell.includes(";") ? cell.split(";") : cell.split(",");
+    return s.map(x=>x.trim()).filter(x=>x);
+  }
+
+  // --------------- DATA LOADING & BUILD ---------------
+  async function loadAndBuild(){
+    const raw = await fetch(SHEET_CSV_URL).then(r=>r.text());
+    const rows = parseCSV(raw);
+    if (rows.length < 2){
+      alert("Data CSV tidak ditemukan atau kosong. Pastikan sheet dipublish sebagai CSV.");
+      return;
+    }
+    const headers = rows[0].map(h=>normalizeHeader(h));
+
+    // map header names to indices (try variants)
+    const idx = {
+      kingdom: getColIndex(headers, [COLS.kingdom]),
+      divisi: getColIndex(headers, [COLS.divisi]),
+      kelas: getColIndex(headers, [COLS.kelas]),
+      ordo: getColIndex(headers, [COLS.ordo]),
+      famili: getColIndex(headers, [COLS.famili, "family"]),
+      genus: getColIndex(headers, [COLS.genus]),
+      nama_latin: getColIndex(headers, [COLS.nama_latin, "nama latin","nama_latin","nama ilmiah","scientific name"]),
+      nama_lokal: getColIndex(headers, [COLS.nama_lokal, "nama lokal","local name"]),
+      iucn: getColIndex(headers, [COLS.iucn,"iucn status","status iucn"]),
+      cites: getColIndex(headers, [COLS.cites,"cites"]),
+      p106: getColIndex(headers, [COLS.p106,"p 106","p.106","p106"]),
+      deskripsi: getColIndex(headers, [COLS.deskripsi,"deskripsi","description"]),
+      persebaran: getColIndex(headers, [COLS.persebaran,"persebaran","sebaran","distribution"]),
+      lat: getColIndex(headers, [COLS.latitud,"latitud","latitude","lat"]),
+      lng: getColIndex(headers, [COLS.longitud,"longitud","longitude","lon","lng"]),
+      foto: getColIndex(headers, [COLS.foto,"foto","gambar","image","images","photo"])
+    };
+
+    // Build array of objects
+    const data = [];
+    for (let i=1;i<rows.length;i++){
+      const r = rows[i];
+      // skip empty rows
+      if (!r.some(cell => (cell||"").trim() !== "")) continue;
+      const obj = {
+        kingdom: idx.kingdom>=0 ? (r[idx.kingdom]||"").trim() : "",
+        divisi: idx.divisi>=0 ? (r[idx.divisi]||"").trim() : "",
+        kelas: idx.kelas>=0 ? (r[idx.kelas]||"").trim() : "",
+        ordo: idx.ordo>=0 ? (r[idx.ordo]||"").trim() : "",
+        famili: idx.famili>=0 ? (r[idx.famili]||"").trim() : "",
+        genus: idx.genus>=0 ? (r[idx.genus]||"").trim() : "",
+        nama_latin: idx.nama_latin>=0 ? (r[idx.nama_latin]||"").trim() : "",
+        nama_lokal: idx.nama_lokal>=0 ? (r[idx.nama_lokal]||"").trim() : "",
+        iucn: idx.iucn>=0 ? (r[idx.iucn]||"").trim() : "",
+        cites: idx.cites>=0 ? (r[idx.cites]()
