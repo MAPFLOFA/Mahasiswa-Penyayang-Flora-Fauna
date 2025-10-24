@@ -1,126 +1,68 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Flora Kalimantan</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    nav a { margin-right: 10px; text-decoration: none; color: green; }
-    .card { border: 1px solid #ccc; padding: 10px; margin: 5px; border-radius: 5px; }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>🌿 Flora Kalimantan</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="flora.html">Flora</a>
-      <a href="fauna.html">Fauna</a>
-    </nav>
-  </header>
+<script>
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1y5ba3S5XMWB7aNIy5Z0EQ0UyXSvNEW5v6HWAz0X6L1y30gtBADGFuWMiOljHpOUp5jE-8Dy5WJp/pub?output=csv";
 
-  <main>
-    <h2>Daftar Famili</h2>
-    <ul id="family-list"></ul>
+let data = [];
 
-    <h2 id="selected-family"></h2>
-    <div id="species-list"></div>
-  </main>
-<details>
-  <summary>Dipterocarpaceae</summary>
-  <ul>
-    <li>
-      <details>
-        <summary>Shorea</summary>
-        <ul>
-          <li>Shorea leprosula</li>
-          <li>Shorea parvifolia</li>
-          <li>Shorea johorensis</li>
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>Dipterocarpus</summary>
-        <ul>
-          <li>Dipterocarpus gracilis</li>
-          <li>Dipterocarpus alatus</li>
-        </ul>
-      </details>
-    </li>
-  </ul>
-</details>
+// Ambil data dari Google Sheets (CSV)
+async function loadData() {
+  const res = await fetch(SHEET_URL);
+  const csvText = await res.text();
+  const rows = csvText.split("\n").map(r => r.split(","));
+  const headers = rows[0];
+  data = rows.slice(1).map(row => {
+    let obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim());
+    return obj;
+  });
+  showFamilies();
+}
 
-<details>
-  <summary>Myrtaceae</summary>
-  <ul>
-    <li>
-      <details>
-        <summary>Syzygium</summary>
-        <ul>
-          <li>Syzygium aromaticum</li>
-          <li>Syzygium cumini</li>
-        </ul>
-      </details>
-    </li>
-  </ul>
-</details>
+// Tampilkan daftar Famili
+function showFamilies() {
+  const families = [...new Set(data.map(d => d.Famili))];
+  const container = document.getElementById("content");
+  container.innerHTML = `<h2>Pilih Famili</h2>`;
+  families.forEach(fam => {
+    const btn = document.createElement("button");
+    btn.textContent = fam;
+    btn.onclick = () => showGenus(fam);
+    container.appendChild(btn);
+  });
+}
 
-  <script>
-    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSbaeJ5hXMMBW73nlY26ZOogUXY5xNesVvbGnWAzOoX6l3yqOtpABGfumMo1QsHgOupSjE-dBvj5W-l/pub?output=csv";
+// Tampilkan daftar Genus dari Famili yang diklik
+function showGenus(family) {
+  const genera = [...new Set(data.filter(d => d.Famili === family).map(d => d.Genus))];
+  const container = document.getElementById("content");
+  container.innerHTML = `<h2>Famili: ${family}</h2>`;
+  genera.forEach(gen => {
+    const btn = document.createElement("button");
+    btn.textContent = gen;
+    btn.onclick = () => showSpecies(family, gen);
+    container.appendChild(btn);
+  });
+}
 
-    async function loadData() {
-      let res = await fetch(SHEET_URL);
-      let csv = await res.text();
-      let rows = csv.split("\n").map(r => r.split(","));
-      let header = rows[0];
-      let data = rows.slice(1).map(r => {
-        let obj = {};
-        header.forEach((h, i) => obj[h.trim()] = r[i]);
-        return obj;
-      });
+// Tampilkan daftar Spesies
+function showSpecies(family, genus) {
+  const speciesList = data.filter(d => d.Famili === family && d.Genus === genus);
+  const container = document.getElementById("content");
+  container.innerHTML = `<h2>${family} → ${genus}</h2>`;
+  speciesList.forEach(sp => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <h3>${sp.Spesies}</h3>
+      <p><strong>Nama Lokal:</strong> ${sp["Nama Lokal"] || "-"}</p>
+      <p><strong>Status IUCN:</strong> ${sp["Status IUCN"] || "-"}</p>
+      <p><strong>CITES:</strong> ${sp["CITES"] || "-"}</p>
+      <p><strong>P.106:</strong> ${sp["P106"] || "-"}</p>
+      <p><strong>Deskripsi:</strong> ${sp["Deskripsi"] || "-"}</p>
+      <img src="${sp["Gambar"] || ""}" style="max-width:200px; border-radius:8px;">
+      <p><a target="_blank" href="https://www.google.com/maps?q=${sp["Koordinat"]}">📍 Lihat Lokasi</a></p>
+    `;
+    container.appendChild(div);
+  });
+}
 
-      // Ambil daftar Family unik
-      let families = [...new Set(data.map(d => d.Family))];
-
-      let list = document.getElementById("family-list");
-      families.forEach(fam => {
-        let li = document.createElement("li");
-        let a = document.createElement("a");
-        a.href = "#";
-        a.textContent = fam;
-        a.onclick = () => showFamily(fam, data);
-        li.appendChild(a);
-        list.appendChild(li);
-      });
-    }
-
-    function showFamily(family, data) {
-      document.getElementById("selected-family").textContent = "Family: " + family;
-      let container = document.getElementById("species-list");
-      container.innerHTML = "";
-
-      let filtered = data.filter(d => d.Family === family);
-      filtered.forEach(d => {
-        let div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-          <h3>${d.Genus} ${d.Spesies}</h3>
-          <p><b>Nama Lokal:</b> ${d["Nama Lokal"]}</p>
-          <p><b>Deskripsi:</b> ${d.Deskripsi}</p>
-          <p><b>Status IUCN:</b> ${d["Status IUCN"]}</p>
-          <p><b>CITES:</b> ${d.CITES}</p>
-          <p><b>P.106:</b> ${d["P.106"]}</p>
-          <p><b>Lokasi:</b> ${d.Lokasi}</p>
-          ${d["Link Foto"] ? `<img src="${d["Link Foto"]}" width="200">` : ""}
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    loadData();
-  </script>
-</body>
-</html>
-
-
+loadData();
+</script>
