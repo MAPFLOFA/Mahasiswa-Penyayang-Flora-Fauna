@@ -3,65 +3,272 @@
 <head>
   <meta charset="utf-8" />
   <title>Flora Kalimantan — Family</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Styling sederhana -->
+  <style>
+    :root{
+      --bg:#f6fff6;
+      --card:#ffffff;
+      --accent:#2e7d32;
+      --muted:#666;
+      --gap:12px;
+      --radius:10px;
+    }
+    html,body{height:100%; margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--bg); color:#111;}
+    header{background:linear-gradient(180deg, rgba(46,125,50,0.12), transparent); padding:18px 20px; border-bottom:1px solid rgba(0,0,0,0.04);}
+    header h1{margin:0; color:var(--accent); font-size:22px;}
+    header p{margin:4px 0 0; color:var(--muted); font-size:13px;}
+    nav{margin-top:8px;}
+    nav a{color:var(--accent); text-decoration:none; margin-right:10px; font-weight:600; font-size:13px}
+    main{max-width:1100px; margin:18px auto; padding:0 18px;}
+    .intro{background:var(--card); padding:16px; border-radius:var(--radius); box-shadow:0 6px 18px rgba(0,0,0,0.04); margin-bottom:18px;}
+    h2{color:#123; margin:0 0 8px;}
+    .controls{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin:14px 0;}
+    .controls select, .controls input[type="text"]{padding:8px 10px; border-radius:8px; border:1px solid #ddd; background:white;}
+    #content{display:block; margin-top:8px;}
+    details { background:var(--card); padding:12px; border-radius:8px; margin-bottom:10px; box-shadow:0 4px 8px rgba(0,0,0,0.03);}
+    details summary { font-weight:700; cursor:pointer; list-style:none; outline:none; }
+    details[open] { border-left:4px solid var(--accent); padding-left:10px; }
+    .genus { margin:8px 0 0 8px; padding:8px; background:#fbfffb; border-radius:6px; }
+    .species { margin:6px 0 6px 18px; padding:8px; background:#fff; border-radius:6px; border:1px solid #f0f0f0; }
+    .species h4{margin:0 0 6px; font-size:15px;}
+    .meta{color:var(--muted); font-size:13px; margin-top:4px;}
+    img.thumb{max-width:160px; display:block; margin-top:8px; border-radius:6px;}
+    .no-data{color:var(--muted); padding:12px; background:#fff; border-radius:8px;}
+    footer{max-width:1100px;margin:40px auto 80px;padding:0 18px;color:var(--muted);font-size:13px}
+    @media (max-width:600px){
+      .controls{flex-direction:column; align-items:stretch}
+      img.thumb{max-width:100%}
+    }
+  </style>
+
+  <!-- PapaParse (robust CSV parser) -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
   <header>
     <h1>Flora Kalimantan</h1>
+    <p>Database taksonomi — klik famili untuk membuka genus & spesies</p>
     <nav>
       <a href="index.html">Home</a> · 
-      <a href="halaman flora.html">Family</a> · 
-      <a href="flora.html">Upload</a>
+      <a href="flora.html">Family</a> · 
+      <a href="upload.html">Upload</a>
     </nav>
   </header>
 
-<body>
-  <header>
-    <h1>Flora Kalimantan</h1>
-    
-<details>
-  <summary>Dipterocarpaceae</summary>
-  <ul>
-    <li>
-      <details>
-        <summary>Shorea</summary>
-        <ul>
-          <li>Shorea leprosula</li>
-          <li>Shorea parvifolia</li>
-          <li>Shorea johorensis</li>
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>Dipterocarpus</summary>
-        <ul>
-          <li>Dipterocarpus gracilis</li>
-          <li>Dipterocarpus alatus</li>
-        </ul>
-      </details>
-    </li>
-  </ul>
-</details>
+  <main>
+    <div class="intro">
+      <h2>Daftar Famili</h2>
+      <p class="meta">Pilih famili di bawah, atau gunakan filter/cari untuk mempersempit hasil.</p>
 
-<details>
-  <summary>Myrtaceae</summary>
-  <ul>
-    <li>
-      <details>
-        <summary>Syzygium</summary>
-        <ul>
-          <li>Syzygium aromaticum</li>
-          <li>Syzygium cumini</li>
-        </ul>
-      </details>
-    </li>
-  </ul>
-</details>
+      <div class="controls">
+        <label>
+          Filter Family:
+          <select id="filterFamily">
+            <option value="">Semua</option>
+          </select>
+        </label>
 
+        <label>
+          Cari species:
+          <input type="text" id="q" placeholder="ketik nama spesies atau genus...">
+        </label>
 
+        <button id="btnApply">Terapkan</button>
+        <button id="btnReset">Reset</button>
+      </div>
+    </div>
 
+    <div id="content" aria-live="polite">
+      <!-- hasil akan dirender di sini -->
+    </div>
+  </main>
 
+  <footer>
+    © MAPFLOFA 2025 — Data bersumber dari Google Sheets (opsional) atau sample lokal.
+  </footer>
+
+<script>
+/*
+  Cara pakai:
+  - Jika sudah publish Google Sheets ke web (CSV), salin URL CSV publik dan 
+    ganti SHEET_CSV_URL di bawah ini.
+  - Jika belum, file ini akan pakai sampleData (contoh) sehingga bisa langsung dicoba.
+*/
+
+// LETAK CSV PUBLIC GOOGLE SHEETS DI SINI (jika ada), contoh:
+// const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/ID_SHEET/pub?output=csv";
+const SHEET_CSV_URL = ""; // <-- kosong = pakai sample data lokal
+
+// Sample data (jika belum pakai Sheets)
+const sampleData = [
+  // Header: Famili,Genus,Spesies,Nama Lokal,Deskripsi,Status IUCN,CITES,P106,Gambar,Koordinat
+  { Famili:"Dipterocarpaceae", Genus:"Shorea", Spesies:"Shorea leprosula", "Nama Lokal":"Meranti merah", Deskripsi:"Pohon hutan tinggi, kayu berharga.", "Status IUCN":"EN", CITES:"II", P106:"Dilindungi", Gambar:"https://upload.wikimedia.org/wikipedia/commons/1/1b/Shorea_leprosula.jpg", Koordinat:"-0.5,117.1" },
+  { Famili:"Dipterocarpaceae", Genus:"Shorea", Spesies:"Shorea parvifolia", "Nama Lokal":"Meranti kecil", Deskripsi:"Pohon dipterokarpa.", "Status IUCN":"VU", CITES:"-", P106:"Dilindungi", Gambar:"", Koordinat:"-0.6,116.9" },
+  { Famili:"Dipterocarpaceae", Genus:"Dipterocarpus", Spesies:"Dipterocarpus gracilis", "Nama Lokal":"Keruing", Deskripsi:"Kayu keras.", "Status IUCN":"VU", CITES:"II", P106:"Dilindungi", Gambar:"", Koordinat:"-0.8,116.8" },
+
+  { Famili:"Myrtaceae", Genus:"Syzygium", Spesies:"Syzygium aromaticum", "Nama Lokal":"Cengkeh", Deskripsi:"Rempah penting.", "Status IUCN":"LC", CITES:"-", P106:"Tidak", Gambar:"", Koordinat:"-0.9,117.2" },
+  { Famili:"Myrtaceae", Genus:"Syzygium", Spesies:"Syzygium cumini", "Nama Lokal":"Jambolan", Deskripsi:"Pohon buah.", "Status IUCN":"LC", CITES:"-", P106:"Tidak", Gambar:"", Koordinat:"-1.0,117.0" },
+
+  { Famili:"Moraceae", Genus:"Artocarpus", Spesies:"Artocarpus elasticus", "Nama Lokal":"Nangka kecil", Deskripsi:"Buah besar.", "Status IUCN":"LC", CITES:"-", P106:"Tidak", Gambar:"", Koordinat:"-0.7,116.7" }
+];
+
+/* ---------- helper: render UI dari data array ---------- */
+function groupData(arr){
+  // keluarkan objek: {Famili:{Genus:[items...]}}
+  const families = {};
+  arr.forEach(it=>{
+    const f = (it.Famili || it.Family || it.FAMILY || "").trim() || "Unknown";
+    const g = (it.Genus || it.GENUS || "").trim() || "Unknown";
+    const s = (it.Spesies || it.Species || it.SPECIES || it.Sp || "").trim() || (it.Spesies || it.species || "");
+    if(!families[f]) families[f] = {};
+    if(!families[f][g]) families[f][g] = [];
+    families[f][g].push({...it, Spesies: s});
+  });
+  return families;
+}
+
+function buildFamilySelect(families){
+  const sel = document.getElementById("filterFamily");
+  sel.innerHTML = '<option value="">Semua</option>';
+  Object.keys(families).sort().forEach(f=>{
+    const op = document.createElement("option");
+    op.value = f;
+    op.textContent = f;
+    sel.appendChild(op);
+  });
+}
+
+function renderFamilies(families, filterFamily="", query=""){
+  const content = document.getElementById("content");
+  content.innerHTML = "";
+  const famKeys = Object.keys(families).sort();
+  const q = (query||"").trim().toLowerCase();
+
+  const filteredFam = filterFamily ? famKeys.filter(f=>f===filterFamily) : famKeys;
+
+  if(filteredFam.length===0){
+    content.innerHTML = '<div class="no-data">Tidak ada family yang cocok.</div>';
+    return;
+  }
+
+  filteredFam.forEach(f=>{
+    const detailsEl = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.textContent = f;
+    detailsEl.appendChild(summary);
+
+    const genera = Object.keys(families[f]).sort();
+    genera.forEach(g=>{
+      const gDiv = document.createElement("div");
+      gDiv.className = "genus";
+      const gTitle = document.createElement("div");
+      gTitle.style.fontWeight = 700;
+      gTitle.textContent = g;
+      gDiv.appendChild(gTitle);
+
+      families[f][g].forEach(sp=>{
+        const spText = (sp.Spesies || sp.Species || sp.species || "").toString();
+        const namaLokal = sp["Nama Lokal"] || sp["NamaLokal"] || sp.namalokal || "";
+        const combined = (spText + " " + namaLokal + " " + (sp.Deskripsi||"")).toLowerCase();
+        if(q && !combined.includes(q)) return; // filter query
+
+        const spEl = document.createElement("div");
+        spEl.className = "species";
+        spEl.innerHTML = `<h4>${spText}</h4>
+                          <div class="meta"><strong>Nama lokal:</strong> ${namaLokal || "-"}</div>
+                          <div class="meta"><strong>Status:</strong> ${sp["Status IUCN"]||sp.IUCN||"-"} &nbsp; <strong>CITES:</strong> ${sp["CITES"]||"-"}</div>
+                          <p>${sp.Deskripsi || "-"}</p>`;
+
+        if(sp.Gambar || sp["Gambar"]){
+          const img = document.createElement("img");
+          img.className = "thumb";
+          img.src = sp.Gambar || sp["Gambar"];
+          img.alt = spText;
+          spEl.appendChild(img);
+        }
+        // Link ke google maps jika koordinat ada
+        const coords = sp.Koordinat || sp.Koordinates || sp.koordinat || sp.Koordinat;
+        if(coords){
+          const a = document.createElement("a");
+          a.href = `https://www.google.com/maps?q=${encodeURIComponent(coords)}`;
+          a.target = "_blank";
+          a.textContent = "📍 Lihat di Google Maps";
+          a.style.display = "inline-block";
+          a.style.marginTop = "8px";
+          spEl.appendChild(a);
+        }
+
+        gDiv.appendChild(spEl);
+      });
+
+      detailsEl.appendChild(gDiv);
+    });
+
+    content.appendChild(detailsEl);
+  });
+}
+
+/* ---------- load CSV (if SHEET_CSV_URL ada) or use sample ---------- */
+async function loadFromSheetOrSample(){
+  let rows;
+  if(SHEET_CSV_URL && SHEET_CSV_URL.trim() !== ""){
+    try{
+      const res = await fetch(SHEET_CSV_URL);
+      const csvText = await res.text();
+      // parse using PapaParse
+      const parsed = Papa.parse(csvText, { header:true, skipEmptyLines:true });
+      rows = parsed.data;
+    }catch(err){
+      console.error("Gagal ambil CSV, pakai sample:", err);
+      rows = sampleData;
+    }
+  } else {
+    rows = sampleData;
+  }
+
+  // Normalize keys to Indonesian header names if CSV has english names
+  rows = rows.map(r=>{
+    const normalized = {};
+    // attempt common header mappings
+    function g(k){ return r[k] ?? r[k.toLowerCase()] ?? r[k.toUpperCase()] ?? r[k.replace(/\s+/g,"_")] ?? r[k.replace(/\s+/g,"")] ?? ""; }
+    normalized.Famili = g("Famili") || g("Family") || g("family") || g("famili");
+    normalized.Genus = g("Genus") || g("genus");
+    normalized.Spesies = g("Spesies") || g("Species") || g("species") || g("Spesies");
+    normalized["Nama Lokal"] = g("Nama Lokal") || g("Nama_Lokal") || g("NamaLokal") || g("nama_lokal") || g("CommonName") || g("Nama");
+    normalized.Deskripsi = g("Deskripsi") || g("Deskripsi (ringkas)") || g("Description");
+    normalized["Status IUCN"] = g("Status IUCN") || g("IUCN") || g("status_iucn");
+    normalized.CITES = g("CITES") || g("Cites") || g("cites");
+    normalized.P106 = g("P.106") || g("P106") || g("Perlindungan");
+    normalized.Gambar = g("Gambar") || g("Foto") || g("Image") || g("gambar");
+    normalized.Koordinat = g("Koordinat") || g("Koordinat (lat,long)") || g("coords") || g("Koordinat");
+    // other fields map directly if present
+    return {...r, ...normalized};
+  });
+
+  const families = groupData(rows);
+  buildFamilySelect(families);
+  renderFamilies(families);
+
+  // store families for filtering actions
+  window._familiesData = families;
+}
+
+/* ---------- UI interactions ---------- */
+document.getElementById("btnApply").addEventListener("click", ()=>{
+  const sel = document.getElementById("filterFamily").value;
+  const q = document.getElementById("q").value;
+  renderFamilies(window._familiesData || {}, sel, q);
+});
+document.getElementById("btnReset").addEventListener("click", ()=>{
+  document.getElementById("filterFamily").value = "";
+  document.getElementById("q").value = "";
+  renderFamilies(window._familiesData || {});
+});
+
+/* ---------- start ---------- */
+loadFromSheetOrSample();
+</script>
+</body>
+</html>
 
