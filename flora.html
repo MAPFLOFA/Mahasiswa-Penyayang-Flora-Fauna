@@ -1,68 +1,84 @@
-<script>
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1y5ba3S5XMWB7aNIy5Z0EQ0UyXSvNEW5v6HWAz0X6L1y30gtBADGFuWMiOljHpOUp5jE-8Dy5WJp/pub?output=csv";
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Flora Kalimantan — Data Otomatis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+    h1 { text-align: center; color: #2a5d34; }
+    details { margin: 10px 0; background: white; padding: 10px; border-radius: 8px; }
+    summary { cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>📗 Flora Kalimantan</h1>
+  <div id="floraContainer">Memuat data dari Google Sheets...</div>
 
-let data = [];
+  <script>
+    // 1️⃣ URL Google Sheets kamu (pastikan output=csv)
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6_77IvuMoSMCWSUhLvUXcoRDSgichpJK-EB3KEuD8Khk01IrdNSTNgV6lGMh9nquR3EO7LBVVO9R/pub?output=csv";
 
-// Ambil data dari Google Sheets (CSV)
-async function loadData() {
-  const res = await fetch(SHEET_URL);
-  const csvText = await res.text();
-  const rows = csvText.split("\n").map(r => r.split(","));
-  const headers = rows[0];
-  data = rows.slice(1).map(row => {
-    let obj = {};
-    headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim());
-    return obj;
-  });
-  showFamilies();
-}
+    // 2️⃣ Fungsi ambil data CSV dan ubah ke struktur Family -> Genus -> Species
+    async function loadFloraData() {
+      const response = await fetch(SHEET_URL);
+      const text = await response.text();
+      const rows = text.trim().split("\n").map(r => r.split(","));
+      const headers = rows.shift();
 
-// Tampilkan daftar Famili
-function showFamilies() {
-  const families = [...new Set(data.map(d => d.Famili))];
-  const container = document.getElementById("content");
-  container.innerHTML = `<h2>Pilih Famili</h2>`;
-  families.forEach(fam => {
-    const btn = document.createElement("button");
-    btn.textContent = fam;
-    btn.onclick = () => showGenus(fam);
-    container.appendChild(btn);
-  });
-}
+      const familyIndex = headers.indexOf("Keluarga");
+      const genusIndex = headers.indexOf("Marga");
+      const speciesIndex = headers.indexOf("Jenis");
 
-// Tampilkan daftar Genus dari Famili yang diklik
-function showGenus(family) {
-  const genera = [...new Set(data.filter(d => d.Famili === family).map(d => d.Genus))];
-  const container = document.getElementById("content");
-  container.innerHTML = `<h2>Famili: ${family}</h2>`;
-  genera.forEach(gen => {
-    const btn = document.createElement("button");
-    btn.textContent = gen;
-    btn.onclick = () => showSpecies(family, gen);
-    container.appendChild(btn);
-  });
-}
+      const data = {};
+      rows.forEach(row => {
+        const fam = row[familyIndex];
+        const genus = row[genusIndex];
+        const species = row[speciesIndex];
 
-// Tampilkan daftar Spesies
-function showSpecies(family, genus) {
-  const speciesList = data.filter(d => d.Famili === family && d.Genus === genus);
-  const container = document.getElementById("content");
-  container.innerHTML = `<h2>${family} → ${genus}</h2>`;
-  speciesList.forEach(sp => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <h3>${sp.Spesies}</h3>
-      <p><strong>Nama Lokal:</strong> ${sp["Nama Lokal"] || "-"}</p>
-      <p><strong>Status IUCN:</strong> ${sp["Status IUCN"] || "-"}</p>
-      <p><strong>CITES:</strong> ${sp["CITES"] || "-"}</p>
-      <p><strong>P.106:</strong> ${sp["P106"] || "-"}</p>
-      <p><strong>Deskripsi:</strong> ${sp["Deskripsi"] || "-"}</p>
-      <img src="${sp["Gambar"] || ""}" style="max-width:200px; border-radius:8px;">
-      <p><a target="_blank" href="https://www.google.com/maps?q=${sp["Koordinat"]}">📍 Lihat Lokasi</a></p>
-    `;
-    container.appendChild(div);
-  });
-}
+        if (!data[fam]) data[fam] = {};
+        if (!data[fam][genus]) data[fam][genus] = [];
+        data[fam][genus].push(species);
+      });
 
-loadData();
-</script>
+      renderFlora(data);
+    }
+
+    // 3️⃣ Render ke halaman
+    function renderFlora(data) {
+      const container = document.getElementById("floraContainer");
+      container.innerHTML = "";
+
+      for (const fam in data) {
+        const famDetails = document.createElement("details");
+        const famSummary = document.createElement("summary");
+        famSummary.textContent = fam;
+        famDetails.appendChild(famSummary);
+
+        const famList = document.createElement("ul");
+        for (const genus in data[fam]) {
+          const genusDetails = document.createElement("details");
+          const genusSummary = document.createElement("summary");
+          genusSummary.textContent = genus;
+          genusDetails.appendChild(genusSummary);
+
+          const speciesList = document.createElement("ul");
+          data[fam][genus].forEach(sp => {
+            const li = document.createElement("li");
+            li.textContent = sp;
+            speciesList.appendChild(li);
+          });
+          genusDetails.appendChild(speciesList);
+          famList.appendChild(genusDetails);
+        }
+
+        famDetails.appendChild(famList);
+        container.appendChild(famDetails);
+      }
+    }
+
+    // 4️⃣ Jalankan
+    loadFloraData();
+  </script>
+</body>
+</html>
